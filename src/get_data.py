@@ -2,7 +2,7 @@ import json
 from os.path import join
 
 BASE_DIR = "data"
-OUTPUTS_DIR = "outputs"
+OUTPUTS_DIR = "outputs/raw"
 
 train_dir, test_dir, val_dir = join(BASE_DIR, "train.txt"), join(BASE_DIR, "test.txt"), join(BASE_DIR, "val.txt")
 
@@ -14,15 +14,16 @@ test = [line.strip() for line in open(test_dir, "r").readlines()]
 raw_x_test = [line.split("\t")[1] for line in test]
 raw_y_test = [line.split("\t")[0] for line in test]
 
-val=[line.strip() for line in open(val_dir, "r").readlines()]
-raw_x_val=[line.split("\t")[1] for line in val]
-raw_y_val=[line.split("\t")[0] for line in val]
+val = [line.strip() for line in open(val_dir, "r").readlines()]
+raw_x_val = [line.split("\t")[1] for line in val]
+raw_y_val = [line.split("\t")[0] for line in val]
 
-with open(join(OUTPUTS_DIR, "train.txt"), 'w') as filehandle:
-    json.dump(train, filehandle)
+for partition in ["train", "test", "val"]:
 
-with open(join(OUTPUTS_DIR, "test.txt"), 'w') as filehandle:
-    json.dump(test, filehandle)
+    with open(join(OUTPUTS_DIR, "raw_x_" + partition + ".txt"), 'w') as filehandle:
+        file_name = "raw_x_" + partition
+        json.dump(globals()[file_name], filehandle)
 
-with open(join(OUTPUTS_DIR, "val.txt"), 'w') as filehandle:
-    json.dump(val, filehandle)
+    with open(join(OUTPUTS_DIR, "raw_y_" + partition + ".txt"), 'w') as filehandle:
+        file_name = "raw_y_" + partition
+        json.dump(globals()[file_name], filehandle)
