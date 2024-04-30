@@ -37,7 +37,7 @@ def define_params():
               'batch_test': 5000,
               'categories': ['phishing', 'legitimate'],
               'char_index': None,
-              'epoch': 1,
+              'epoch': 30,
               'embedding_dimension': 50,
               'dataset_dir': "../outputs/tokenized/"}
 
