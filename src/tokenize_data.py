@@ -26,8 +26,8 @@ def _load_data(file_dir):
         "raw_y_test"]
 
 
-def tokenize():
-    raw_x_train, raw_x_val, raw_y_train, raw_y_val, raw_x_test, raw_y_test = _load_data(INPUTS_DIR)
+def tokenize(dataset_input_dir):
+    raw_x_train, raw_x_val, raw_y_train, raw_y_val, raw_x_test, raw_y_test = _load_data(dataset_input_dir)
 
     tokenizer = Tokenizer(lower=True, char_level=True, oov_token='-n-')
     tokenizer.fit_on_texts(raw_x_train + raw_x_val + raw_x_test)
@@ -47,7 +47,7 @@ def tokenize():
 
 
 def main():
-    x_train, y_train, x_val, y_val, x_test, y_test, char_index = tokenize()
+    x_train, y_train, x_val, y_val, x_test, y_test, char_index = tokenize(INPUTS_DIR)
 
     save_variable(x_train, "x_train")
     save_variable(y_train, "y_train")

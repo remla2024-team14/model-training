@@ -8,7 +8,7 @@ from config_reader import ConfigReader
 
 directories = ConfigReader().params["directories"]
 BASE_DIR, OUTPUTS_DIR = directories["base_dir"], directories["raw_outputs_dir"]
-REMOTE = ConfigReader().params["remote"]
+REMOTE = ConfigReader().params["remote_download"]
 
 load_dotenv()
 

@@ -3,7 +3,7 @@ from os.path import join
 import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-from src.config_reader import ConfigReader
+from config_reader import ConfigReader
 
 directories = ConfigReader().params["directories"]
 MODEL_PATH, TOKENIZED_PATH = directories["model_path"], directories["tokenized_outputs_dir"]
