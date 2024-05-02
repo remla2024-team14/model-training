@@ -4,9 +4,11 @@ from os.path import join
 import boto3
 from dotenv import load_dotenv
 
-BASE_DIR = "data"
-OUTPUTS_DIR = "outputs/raw"
-REMOTE = False
+from config_reader import ConfigReader
+
+directories = ConfigReader().params["directories"]
+BASE_DIR, OUTPUTS_DIR = directories["base_dir"], directories["raw_outputs_dir"]
+REMOTE = ConfigReader().params["remote"]
 
 load_dotenv()
 

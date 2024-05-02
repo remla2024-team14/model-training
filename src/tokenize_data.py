@@ -6,9 +6,12 @@ import numpy as np
 import json
 from os.path import join
 
-INPUTS_DIR = "outputs/raw"
-OUTPUTS_DIR = "outputs/tokenized"
-FILE_NAMES = ["x_train", "x_test", "y_train", "y_test", "x_val", "y_val"]
+from config_reader import ConfigReader
+
+directories = ConfigReader().params["directories"]
+
+INPUTS_DIR, OUTPUTS_DIR = directories["raw_outputs_dir"], directories["tokenized_outputs_dir"]
+FILE_NAMES = ["x_train", "y_train", "x_test", "y_test", "x_val", "y_val"]
 
 
 def _load_data(file_dir):

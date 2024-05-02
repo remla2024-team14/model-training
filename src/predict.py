@@ -3,10 +3,10 @@ from os.path import join
 import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from src.config_reader import ConfigReader
 
-MODEL_PATH = "outputs/model.h5"
-TOKENIZED_PATH = "outputs/tokenized"
-
+directories = ConfigReader().params["directories"]
+MODEL_PATH, TOKENIZED_PATH = directories["model_path"], directories["tokenized_outputs_dir"]
 
 def load_variable(filename):
     file_path = join(TOKENIZED_PATH, filename + ".txt")

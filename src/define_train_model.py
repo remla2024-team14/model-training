@@ -6,8 +6,11 @@ import json
 
 import numpy as np
 
-TOKENIZED_PATH = "outputs/tokenized"
-MODEL_PATH = "outputs/model.h5"
+from config_reader import ConfigReader
+
+directories = ConfigReader().params["directories"]
+
+TOKENIZED_PATH, MODEL_PATH = directories["tokenized_outputs_dir"], directories["model_path"]
 
 
 def load_variable(filename):
@@ -30,18 +33,7 @@ def load_tokenized_data():
 
 
 def define_params():
-    params = {'loss_function': 'binary_crossentropy',
-              'optimizer': 'adam',
-              'sequence_length': 200,
-              'batch_train': 5000,
-              'batch_test': 5000,
-              'categories': ['phishing', 'legitimate'],
-              'char_index': None,
-              'epoch': 30,
-              'embedding_dimension': 50,
-              'dataset_dir': "../outputs/tokenized/"}
-
-    return params
+    return ConfigReader().params["model_params"]
 
 
 def define_model(params, char_index):
