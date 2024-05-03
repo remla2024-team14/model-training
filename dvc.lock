@@ -33,3 +33,10 @@ stages:
       hash: md5
       md5: 893362bf42aa927cb05c1b38f6331a2c
       size: 2782
+  predict:
+    cmd: python src/predict.py
+    deps:
+    - path: src/predict.py
+      hash: md5
+      md5: dad6262777b4232871440532f57572d1
+      size: 1480
