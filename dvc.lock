@@ -20,3 +20,16 @@ stages:
       hash: md5
       md5: 581013d3d14e667f1348ad00f6d346c3
       size: 2512
+    outs:
+    - path: outputs/tokenized/
+      hash: md5
+      md5: 01c0c42f8b3c0b2883d6afe43bc2d35c.dir
+      size: 862021815
+      nfiles: 7
+  define_train_model:
+    cmd: python src/define_train_model.py
+    deps:
+    - path: src/define_train_model.py
+      hash: md5
+      md5: 893362bf42aa927cb05c1b38f6331a2c
+      size: 2782
