@@ -7,3 +7,16 @@ stages:
       hash: md5
       md5: 934333d3f4a42910d4f5219494a9a105
       size: 1877
+    outs:
+    - path: outputs/raw/
+      hash: md5
+      md5: 1192a8cfa564b0e0874343c2ad07202d.dir
+      size: 184455287
+      nfiles: 6
+  tokenize_data:
+    cmd: python src/tokenize_data.py
+    deps:
+    - path: src/tokenize_data.py
+      hash: md5
+      md5: 581013d3d14e667f1348ad00f6d346c3
+      size: 2512
