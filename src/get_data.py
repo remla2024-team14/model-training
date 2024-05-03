@@ -33,11 +33,17 @@ val = [line.strip() for line in open(val_dir, "r").readlines()]
 raw_x_val = [line.split("\t")[1] for line in val]
 raw_y_val = [line.split("\t")[0] for line in val]
 
-for partition in ["train", "test", "val"]:
-    with open(join(OUTPUTS_DIR, "raw_x_" + partition + ".txt"), 'w') as filehandle:
-        file_name = "raw_x_" + partition
-        json.dump(globals()[file_name], filehandle)
+OUTPUTS_DIR = 'outputs/raw'
 
-    with open(join(OUTPUTS_DIR, "raw_y_" + partition + ".txt"), 'w') as filehandle:
-        file_name = "raw_y_" + partition
-        json.dump(globals()[file_name], filehandle)
+# check directory exists
+os.makedirs(OUTPUTS_DIR, exist_ok=True)
+
+for partition in ["train", "test", "val"]:
+    file_path_x = join(OUTPUTS_DIR, f"raw_x_{partition}.txt")
+    file_path_y = join(OUTPUTS_DIR, f"raw_y_{partition}.txt")
+
+    with open(file_path_x, 'w') as filehandle:
+        json.dump(globals()[f"raw_x_{partition}"], filehandle)
+
+    with open(file_path_y, 'w') as filehandle:
+        json.dump(globals()[f"raw_y_{partition}"], filehandle)
