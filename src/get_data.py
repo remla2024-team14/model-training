@@ -21,6 +21,10 @@ if REMOTE:
         'val.txt': 'data/val.txt'
     }
 
+    # Ensure the data directory exists
+    if not os.path.exists(BASE_DIR):
+        os.makedirs(BASE_DIR)
+
     # download data with files and keys
     for local_file, s3_key in files_and_keys.items():
         local_path = os.path.join(BASE_DIR, local_file)
