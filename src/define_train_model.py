@@ -1,6 +1,7 @@
 from keras.models import Sequential
 from keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense, Dropout
-
+from keras.metrics import Precision, Recall
+import os
 from os.path import join
 import json
 
@@ -10,8 +11,12 @@ from config_reader import ConfigReader
 
 directories = ConfigReader().params["directories"]
 
-TOKENIZED_PATH, MODEL_PATH = directories["tokenized_outputs_dir"], directories["model_path"]
+TOKENIZED_PATH = directories["tokenized_outputs_dir"]
+MODEL_PATH = directories["model_path"]
+METRICS_PATH = join(directories["metrics_file"])
 
+metrics_dir = os.path.dirname(METRICS_PATH)
+os.makedirs(metrics_dir, exist_ok=True)
 
 def load_variable(filename):
     file_path = join(TOKENIZED_PATH, filename + ".txt")
@@ -75,14 +80,27 @@ def define_model(params, char_index):
 
 
 def train_model(model, params, x_train, y_train, x_val, y_val):
-    model.compile(loss=params['loss_function'], optimizer=params['optimizer'], metrics=['accuracy'])
+    model.compile(loss=params['loss_function'], optimizer=params['optimizer'], metrics=['accuracy', Precision(), Recall()])
 
     hist = model.fit(x_train, y_train,
                      batch_size=params['batch_train'],
                      epochs=params['epoch'],
                      shuffle=True,
-                     validation_data=(x_val, y_val)
-                     )
+                     validation_data=(x_val, y_val))
+
+    metrics = {
+        "accuracy": hist.history['accuracy'][-1],
+        "val_accuracy": hist.history['val_accuracy'][-1],
+        "precision": hist.history['precision'][-1],
+        "val_precision": hist.history['val_precision'][-1],
+        "recall": hist.history['recall'][-1],
+        "val_recall": hist.history['val_recall'][-1],
+        "loss": hist.history['loss'][-1],
+        "val_loss": hist.history['val_loss'][-1]
+    }
+
+    with open(METRICS_PATH, 'w') as json_file:
+        json.dump(metrics, json_file)
 
     return model
 

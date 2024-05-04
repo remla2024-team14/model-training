@@ -3,7 +3,8 @@
     "base_dir": "data",
     "raw_outputs_dir": "outputs/raw",
     "tokenized_outputs_dir": "outputs/tokenized",
-    "model_path": "outputs/model.h5"
+    "model_path": "outputs/model.h5",
+    "metrics_file": "outputs/metrics/metrics.json"
   },
   "remote_download": true,
   "model_params": {
