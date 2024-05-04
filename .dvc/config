@@ -1,0 +1,4 @@
+[core]
+    remote = team14remote
+['remote "team14remote"']
+    url = s3://awsbucketteam14

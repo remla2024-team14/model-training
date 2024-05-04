@@ -15,9 +15,21 @@ load_dotenv()
 if REMOTE:
     s3 = boto3.client('s3', aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
                       aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
-    s3.download_file('url-phishing-data', 'train.txt', 'data/train.txt')
-    s3.download_file('url-phishing-data', 'test.txt', 'data/test.txt')
-    s3.download_file('url-phishing-data', 'val.txt', 'data/val.txt')
+    files_and_keys = {
+        'train.txt': 'data/train.txt',
+        'test.txt': 'data/test.txt',
+        'val.txt': 'data/val.txt'
+    }
+
+    # Ensure the data directory exists
+    if not os.path.exists(BASE_DIR):
+        os.makedirs(BASE_DIR)
+
+    # download data with files and keys
+    for local_file, s3_key in files_and_keys.items():
+        local_path = os.path.join(BASE_DIR, local_file)
+        s3.download_file(os.getenv('AWS_BUCKET_NAME'), s3_key, local_path)
+        print(f"Downloaded {s3_key} to {local_path}")
 
 train_dir, test_dir, val_dir = join(BASE_DIR, "train.txt"), join(BASE_DIR, "test.txt"), join(BASE_DIR, "val.txt")
 
@@ -33,11 +45,17 @@ val = [line.strip() for line in open(val_dir, "r").readlines()]
 raw_x_val = [line.split("\t")[1] for line in val]
 raw_y_val = [line.split("\t")[0] for line in val]
 
-for partition in ["train", "test", "val"]:
-    with open(join(OUTPUTS_DIR, "raw_x_" + partition + ".txt"), 'w') as filehandle:
-        file_name = "raw_x_" + partition
-        json.dump(globals()[file_name], filehandle)
+OUTPUTS_DIR = 'outputs/raw'
 
-    with open(join(OUTPUTS_DIR, "raw_y_" + partition + ".txt"), 'w') as filehandle:
-        file_name = "raw_y_" + partition
-        json.dump(globals()[file_name], filehandle)
+# check directory exists
+os.makedirs(OUTPUTS_DIR, exist_ok=True)
+
+for partition in ["train", "test", "val"]:
+    file_path_x = join(OUTPUTS_DIR, f"raw_x_{partition}.txt")
+    file_path_y = join(OUTPUTS_DIR, f"raw_y_{partition}.txt")
+
+    with open(file_path_x, 'w') as filehandle:
+        json.dump(globals()[f"raw_x_{partition}"], filehandle)
+
+    with open(file_path_y, 'w') as filehandle:
+        json.dump(globals()[f"raw_y_{partition}"], filehandle)

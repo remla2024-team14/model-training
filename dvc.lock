@@ -1,0 +1,42 @@
+schema: '2.0'
+stages:
+  get_data:
+    cmd: python src/get_data.py
+    deps:
+    - path: src/get_data.py
+      hash: md5
+      md5: 426578a400f00cf32c3e2edf8ef9e173
+      size: 2247
+    outs:
+    - path: outputs/raw/
+      hash: md5
+      md5: 1192a8cfa564b0e0874343c2ad07202d.dir
+      size: 184455287
+      nfiles: 6
+  tokenize_data:
+    cmd: python src/tokenize_data.py
+    deps:
+    - path: src/tokenize_data.py
+      hash: md5
+      md5: 581013d3d14e667f1348ad00f6d346c3
+      size: 2512
+    outs:
+    - path: outputs/tokenized/
+      hash: md5
+      md5: 01c0c42f8b3c0b2883d6afe43bc2d35c.dir
+      size: 862021815
+      nfiles: 7
+  define_train_model:
+    cmd: python src/define_train_model.py
+    deps:
+    - path: src/define_train_model.py
+      hash: md5
+      md5: 893362bf42aa927cb05c1b38f6331a2c
+      size: 2782
+  predict:
+    cmd: python src/predict.py
+    deps:
+    - path: src/predict.py
+      hash: md5
+      md5: dad6262777b4232871440532f57572d1
+      size: 1480

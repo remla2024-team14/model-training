@@ -4,6 +4,7 @@ from sklearn.preprocessing import LabelEncoder
 import numpy as np
 
 import json
+import os
 from os.path import join
 
 from config_reader import ConfigReader
@@ -47,6 +48,9 @@ def tokenize(dataset_input_dir):
 
 
 def main():
+    # Ensure input and output directories exist
+    os.makedirs(INPUTS_DIR, exist_ok=True)
+    os.makedirs(OUTPUTS_DIR, exist_ok=True)
     x_train, y_train, x_val, y_val, x_test, y_test, char_index = tokenize(INPUTS_DIR)
 
     save_variable(x_train, "x_train")

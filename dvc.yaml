@@ -1,0 +1,21 @@
+stages:
+  get_data:
+    cmd: python src/get_data.py
+    deps:
+      - src/get_data.py
+    outs:
+      - outputs/raw/
+  tokenize_data:
+    cmd: python src/tokenize_data.py
+    deps:
+      - src/tokenize_data.py
+    outs:
+      - outputs/tokenized/
+  define_train_model:
+    cmd: python src/define_train_model.py
+    deps:
+      - src/define_train_model.py
+  predict:
+    cmd: python src/predict.py
+    deps:
+      - src/predict.py
