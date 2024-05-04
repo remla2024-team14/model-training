@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/get_data.py
       hash: md5
-      md5: 426578a400f00cf32c3e2edf8ef9e173
-      size: 2247
+      md5: 9f2c730f5812b88f5926f90465175b78
+      size: 2202
     outs:
     - path: outputs/raw/
       hash: md5
@@ -29,10 +29,28 @@ stages:
   define_train_model:
     cmd: python src/define_train_model.py
     deps:
+    - path: config.json
+      hash: md5
+      md5: 580f010ab18b398328fb139788dcb0de
+      size: 627
+    - path: outputs/tokenized/
+      hash: md5
+      md5: 01c0c42f8b3c0b2883d6afe43bc2d35c.dir
+      size: 862021815
+      nfiles: 7
     - path: src/define_train_model.py
       hash: md5
-      md5: 893362bf42aa927cb05c1b38f6331a2c
-      size: 2782
+      md5: 219fc6b4a000a5866dae0e47530c9822
+      size: 3507
+    outs:
+    - path: outputs/metrics/metrics.json
+      hash: md5
+      md5: 0585d5e771d479006ed5fb9f10531386
+      size: 264
+    - path: outputs/model.h5
+      hash: md5
+      md5: 8d9a244183a97fde13f05cc529498f88
+      size: 5483016
   predict:
     cmd: python src/predict.py
     deps:

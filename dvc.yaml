@@ -15,6 +15,12 @@ stages:
     cmd: python src/define_train_model.py
     deps:
       - src/define_train_model.py
+      - outputs/tokenized/  # Relies on processed datasets
+      - config.json  # Files containing training configurations
+    outs:
+      - outputs/model.h5  # Model output path
+    metrics:
+      - outputs/metrics/metrics.json  #  Place indicator files in a separate directory
   predict:
     cmd: python src/predict.py
     deps:
