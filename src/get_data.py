@@ -13,11 +13,19 @@ REMOTE = ConfigReader().params["remote_download"]
 load_dotenv()
 
 if REMOTE:
-    s3 = boto3.client('s3', aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+    s3 = boto3.client('s3', region_name=os.getenv('AWS_DEFAULT_REGION'), aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
                       aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
-    s3.download_file('url-phishing-data', 'train.txt', 'data/train.txt')
-    s3.download_file('url-phishing-data', 'test.txt', 'data/test.txt')
-    s3.download_file('url-phishing-data', 'val.txt', 'data/val.txt')
+    files_and_keys = {
+        'train.txt': 'data/train.txt',
+        'test.txt': 'data/test.txt',
+        'val.txt': 'data/val.txt'
+    }
+
+    # download data with files and keys
+    for local_file, s3_key in files_and_keys.items():
+        local_path = os.path.join(BASE_DIR, local_file)
+        s3.download_file(os.getenv('AWS_BUCKET_NAME'), s3_key, local_path)
+        print(f"Downloaded {s3_key} to {local_path}")
 
 train_dir, test_dir, val_dir = join(BASE_DIR, "train.txt"), join(BASE_DIR, "test.txt"), join(BASE_DIR, "val.txt")
 
