@@ -74,6 +74,10 @@ All metrics will be generated to an output file named `metrics.json`.
 
 ## Code Quality
 
+TODO: Report on code quality scores
+TODO: Document configuration decisions
+TODO: Propose new missing ML rules
+
 
 ## Contributors
 
