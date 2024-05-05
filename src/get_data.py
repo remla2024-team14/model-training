@@ -1,3 +1,5 @@
+"""Module for loading raw train and test datasets, possibly from remote"""
+
 import json
 import os
 from os.path import join
@@ -31,7 +33,9 @@ if REMOTE:
         s3.download_file(os.getenv('AWS_BUCKET_NAME'), s3_key, local_path)
         print(f"Downloaded {s3_key} to {local_path}")
 
-train_dir, test_dir, val_dir = join(BASE_DIR, "train.txt"), join(BASE_DIR, "test.txt"), join(BASE_DIR, "val.txt")
+train_dir = join(BASE_DIR, "train.txt")
+test_dir = join(BASE_DIR, "test.txt")
+val_dir = join(BASE_DIR, "val.txt")
 
 train = [line.strip() for line in open(train_dir, "r").readlines()[1:]]
 raw_x_train = [line.split("\t")[1] for line in train]
