@@ -6,23 +6,10 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from config_reader import ConfigReader
+from utils import load_variable
 
 directories = ConfigReader().params["directories"]
 MODEL_PATH, TOKENIZED_PATH = directories["model_path"], directories["tokenized_outputs_dir"]
-
-
-def load_variable(filename):
-    """
-    Load a variable from a text file.
-
-    Args:
-        filename (str): The name of the file to load from (without extension).
-
-    Returns:
-        numpy.ndarray: The variable loaded from the file.
-    """
-    file_path = join(TOKENIZED_PATH, filename + ".txt")
-    return np.loadtxt(file_path)
 
 
 def load_test_dataset():

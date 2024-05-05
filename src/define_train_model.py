@@ -3,6 +3,7 @@
 from keras.models import Sequential
 from keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense, Dropout
 from keras.metrics import Precision, Recall
+from utils import load_variable
 import os
 from os.path import join
 import json
@@ -19,20 +20,6 @@ METRICS_PATH = join(directories["metrics_file"])
 
 metrics_dir = os.path.dirname(METRICS_PATH)
 os.makedirs(metrics_dir, exist_ok=True)
-
-
-def load_variable(filename):
-    """
-    Load a variable from a text file.
-
-    Args:
-        filename (str): The name of the file to load from (without extension).
-
-    Returns:
-        numpy.ndarray: The variable loaded from the file.
-    """
-    file_path = join(TOKENIZED_PATH, filename + ".txt")
-    return np.loadtxt(file_path)
 
 
 def load_tokenized_data():
