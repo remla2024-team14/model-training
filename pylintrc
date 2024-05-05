@@ -20,7 +20,7 @@ fail-on=
 fail-under=10.0
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=CVS
+ignore=CVS, .git, __pycache__, build, dist, .gitignore, requirements.txt, config.json
 
 # Add files or directories matching the regex patterns to the ignore-list. The
 # regex matches against paths and can be in Posix or Windows format.
@@ -357,7 +357,12 @@ bad-names=foo,
           baz,
           toto,
           tutu,
-          tata
+          tata,
+          x,
+          y,
+          z,
+          var, 
+          vars,
 
 # Bad variable names regexes, separated by a comma. If names match any regex,
 # they will always be refused
@@ -575,10 +580,10 @@ max-public-methods=20
 max-returns=6
 
 # Maximum number of statements in function / method body.
-max-statements=50
+max-statements=100
 
 # Minimum number of public methods for a class (see R0903).
-min-public-methods=2
+min-public-methods=1
 
 
 [EXCEPTIONS]
@@ -586,4 +591,7 @@ min-public-methods=2
 # Exceptions that will emit a warning when being caught. Defaults to
 # "BaseException, Exception".
 overgeneral-exceptions=BaseException,
-                       Exception
+                       Exception,
+                       ArithmeticError,
+                       BufferError,
+                       LookupError
