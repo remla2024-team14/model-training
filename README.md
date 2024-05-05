@@ -74,9 +74,35 @@ All metrics will be generated to an output file named `metrics.json`.
 
 ## Code Quality
 
-TODO: Report on code quality scores
-TODO: Document configuration decisions
-TODO: Propose new missing ML rules
+This project uses the following linters to display code quality information:
+
+- Pylint
+- Flake8
+
+NOTE: we obtained perfect scores for both Pylint and Flake8.
+
+### Pylint
+
+To run Pylint on a specific file, use `pylint src/<file_name>` or `pylint src/` to analyse the full directory.
+It should output something as:
+
+```
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+```
+
+In Pylint's configuration file `pylintrc`, we have thoroughly analysed linter rules and made the following modifications to adapt it to this specific ML project:
+- We allow the following commonly used variable names in ML: `X_train`,`Y_train`,
+           `X_test` and
+           `Y_test`
+- To discourage non-informative variable names, we defined a set of bad names: `bad-names=foo, baz, toto, tutu, tata, x, y, z, var, vars`
+- We extend the list of exceptions that will emit a warning with `ArithmeticError`, `BufferError` and `LookupError` - especially common in ML projects
+- We ignore files that are either auto-generated or do not contain Python code: `ignore=CVS, .git, __pycache__, build, dist, .gitignore, requirements.txt, config.json` 
+- We only show warnings with high confidence levels and those that lead to inference errors (`confidence=HIGH, INFERENCE_FAILURE`)
+
+### Flake8
+
+To analyse our Python code using Flake8, we run `flake8 --max-line-length 100`. This will configure the maximum allowed line length to 100 (in line with Pylint), instead of the 88 which is the default. 
 
 
 ## Contributors
