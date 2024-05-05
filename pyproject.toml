@@ -6,8 +6,15 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.9,<3.12"
 numpy = "^1.26.4"
+keras = "^3.3.3"
+scikit-learn = "^1.4.2"
+python-dotenv = "^1.0.1"
+dvc = "^3.50.1"
+pylint = "^3.1.0"
+flake8 = "^7.0.0"
+s3fs = "<0.5.0"
 
 
 [build-system]
