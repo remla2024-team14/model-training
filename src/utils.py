@@ -1,10 +1,12 @@
+"""Module containing global helper utility functions"""
+
 import numpy as np
 from config_reader import ConfigReader
-import os
 from os.path import join
 
 directories = ConfigReader().params["directories"]
 TOKENIZED_PATH = directories["tokenized_outputs_dir"]
+
 
 def load_variable(filename):
     """

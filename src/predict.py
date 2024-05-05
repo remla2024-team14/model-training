@@ -1,7 +1,5 @@
 """Module for evaluating the trained model on test set"""
 
-from os.path import join
-
 import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score

@@ -7,9 +7,6 @@ from utils import load_variable
 import os
 from os.path import join
 import json
-
-import numpy as np
-
 from config_reader import ConfigReader
 
 directories = ConfigReader().params["directories"]

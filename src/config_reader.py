@@ -1,11 +1,11 @@
-"""Module providing a ConfigReader for loading in relevant model training and evaluation parameters"""
+"""Module providing a ConfigReader for loading in relevant parameters"""
 
 import json
 
 
 class ConfigReader:
-    """ 
-    A class to read in configuration parameters, including paths to use for outputting models, metrics etc.
+    """
+    A class to read in configuration parameters, including model storage paths
     """
     def __init__(self, file_path="config.json"):
         """
