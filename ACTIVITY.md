@@ -1,8 +1,8 @@
 # A1: ML Config Management (10%)
 
 -- Dani: --
-Created PR: ...
-Approved PR: ...
+Created PR: https://github.com/nadinekuo/URL-Fishing-CS4295/pull/1
+Approved PR: https://github.com/nadinekuo/URL-Fishing-CS4295/pull/6
 
 -- Justin: --
 
