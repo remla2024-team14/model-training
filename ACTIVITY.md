@@ -10,8 +10,10 @@ Created PR: https://github.com/nadinekuo/URL-Fishing-CS4295/pull/6
 
 Approved PR: https://github.com/nadinekuo/URL-Fishing-CS4295/pull/8
 
--- Li Yang: --
+-- Yang Li: --
+
 Created PR: https://github.com/nadinekuo/URL-Fishing-CS4295/pull/7
+
 Approved PR: https://github.com/nadinekuo/URL-Fishing-CS4295/pull/8
 
 -- Nadine: --
