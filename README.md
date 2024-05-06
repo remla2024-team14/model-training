@@ -108,7 +108,10 @@ To analyse our Python code using Flake8, we run `flake8 --max-line-length 100`. 
 
 ### Installation
 
-In your virtual environment, run `pip install pipx` followed by `python -m pipx install poetry`.
+In your virtual environment, run `pip install pipx` followed by `python -m pipx install poetry`. Then, run `python -m pipx ensurepath` and restart your terminal/IDE.
+
+After re-opening your terminal or IDE, you should now be able to run poetry. Test this by simply writing the command `poetry`. Then ensure poetry is up to date by running `pip install --upgrade poetry`
+
 
 
 
