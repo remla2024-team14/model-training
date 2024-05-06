@@ -23,8 +23,19 @@ pip install -r requirements.txt
 
 # using Conda
 conda create --name <env_name> --file requirements.txt
+```
 
-# TODO: update with Poetry later
+
+### How To: Dependency Management with Poetry
+
+In your virtual environment, run `pip install pipx` followed by `python -m pipx install poetry`. Then, run `python -m pipx ensurepath` and restart your terminal/IDE.
+
+After re-opening your terminal or IDE, you should now be able to run poetry. Test this by simply writing the command `poetry`. Then ensure poetry is up to date by running `pip install --upgrade poetry`.
+
+To install the defined dependencies for this project, run:
+
+```
+poetry install
 ```
 
 
@@ -104,13 +115,6 @@ In Pylint's configuration file `pylintrc`, we have thoroughly analysed linter ru
 
 To analyse our Python code using Flake8, we run `flake8 --max-line-length 100`. This will configure the maximum allowed line length to 100 (in line with Pylint), instead of the 88 which is the default. 
 
-### How To: Dependency Management with Poetry
-
-### Installation
-
-In your virtual environment, run `pip install pipx` followed by `python -m pipx install poetry`. Then, run `python -m pipx ensurepath` and restart your terminal/IDE.
-
-After re-opening your terminal or IDE, you should now be able to run poetry. Test this by simply writing the command `poetry`. Then ensure poetry is up to date by running `pip install --upgrade poetry`
 
 
 
