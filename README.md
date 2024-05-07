@@ -1,2 +1,2 @@
 # model-training
-ML training pipeline for spam detection
+ML training pipeline for URL fishing detection
