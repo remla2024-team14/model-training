@@ -8,7 +8,7 @@ import numpy as np
 import json
 import os
 from os.path import join
-
+from lib_ml.preprocessing import TextPreprocessor
 from config_reader import ConfigReader
 
 directories = ConfigReader().params["directories"]
@@ -58,16 +58,22 @@ def tokenize(dataset_input_dir):
     raw_x_val, raw_y_val = data_dict['raw_x_val'], data_dict['raw_y_val']
     raw_x_test, raw_y_test = data_dict['raw_x_test'], data_dict['raw_y_test']
 
-    tokenizer = Tokenizer(lower=True, char_level=True, oov_token='-n-')
-    tokenizer.fit_on_texts(raw_x_train + raw_x_val + raw_x_test)
-    char_index = tokenizer.word_index
-    sequence_length = 200
-    x_train = pad_sequences(tokenizer.texts_to_sequences(raw_x_train), maxlen=sequence_length)
-    x_val = pad_sequences(tokenizer.texts_to_sequences(raw_x_val), maxlen=sequence_length)
-    x_test = pad_sequences(tokenizer.texts_to_sequences(raw_x_test), maxlen=sequence_length)
+    config = {
+        'lower': True,
+        'char_level': True,
+        'oov_token': '-n-',
+        'sequence_length': 200
+    }
+    preprocessor = TextPreprocessor(config)
+    preprocessor.fit_text(raw_x_train + raw_x_val + raw_x_test)
+    char_index = preprocessor.tokenizer.word_index
+
+    # Tokenize and pad sequences
+    x_train = preprocessor.transform_text(raw_x_train)
+    x_val = preprocessor.transform_text(raw_x_val)
+    x_test = preprocessor.transform_text(raw_x_test)
 
     encoder = LabelEncoder()
-
     y_train = encoder.fit_transform(raw_y_train)
     y_val = encoder.transform(raw_y_val)
     y_test = encoder.transform(raw_y_test)
@@ -81,11 +87,13 @@ def main():
 
     This function performs the following steps:
     1. Ensures input and output directories exist.
-    2. Tokenizes input data.
+    2. Tokenizes input data using TextPreprocessor.
     3. Saves tokenized data and associated information.
     """
+
     os.makedirs(INPUTS_DIR, exist_ok=True)
     os.makedirs(OUTPUTS_DIR, exist_ok=True)
+
     x_train, y_train, x_val, y_val, x_test, y_test, char_index = tokenize(INPUTS_DIR)
 
     save_variable(x_train, "x_train")
@@ -94,24 +102,20 @@ def main():
     save_variable(y_val, "y_val")
     save_variable(x_test, "x_test")
     save_variable(y_test, "y_test")
-    with open(join(OUTPUTS_DIR, "char_index.txt"), 'w') as file:
-        json.dump(char_index, file)
+
+    with open(join(OUTPUTS_DIR, "char_index.json"), 'w') as file:
+        json.dump(char_index, file, ensure_ascii=False)
 
 
 def save_variable(variable, filename):
-    """
-    Save a variable to a text file.
 
-    Args:
-        variable: The variable to save.
-        filename (str): The name of the file to save to (without extension).
-
-    Notes:
-        The file will be saved in the OUTPUTS_DIR directory.
-        The variable will be saved in text format.
-    """
-    np.savetxt(join(OUTPUTS_DIR, filename + ".txt"), variable, fmt='%d')
-
+    path = join(OUTPUTS_DIR, filename + ".txt")
+    if isinstance(variable, np.ndarray):
+        np.savetxt(path, variable, fmt='%d')
+    else:
+        # For non-NumPy arrays, save in json or other formats
+        with open(path, 'w') as f:
+            json.dump(variable, f)
 
 if __name__ == "__main__":
     main()

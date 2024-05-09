@@ -1,5 +1,5 @@
 """Module for defining model architecture and training the model"""
-
+import numpy as np
 from keras.models import Sequential
 from keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense, Dropout
 from keras.metrics import Precision, Recall
@@ -8,6 +8,10 @@ import os
 from os.path import join
 import json
 from config_reader import ConfigReader
+from sklearn.preprocessing import LabelEncoder
+import logging
+
+from lib_ml.preprocessing import TextPreprocessor
 
 directories = ConfigReader().params["directories"]
 
@@ -18,32 +22,51 @@ METRICS_PATH = join(directories["metrics_file"])
 metrics_dir = os.path.dirname(METRICS_PATH)
 os.makedirs(metrics_dir, exist_ok=True)
 
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    filename='app.log',
+                    filemode='w',
+                    encoding='utf-8')
 
-def load_tokenized_data():
-    """
-    Load tokenized data and character index from files.
-
-    Returns:
-        tuple: A tuple containing tokenized data and character index:
-            - x_train (numpy.ndarray): Tokenized and padded sequences of input training data.
-            - y_train (numpy.ndarray): Encoded labels for training data.
-            - x_val (numpy.ndarray): Tokenized and padded sequences of input validation data.
-            - y_val (numpy.ndarray): Encoded labels for validation data.
-            - char_index (dict): A dictionary mapping characters to their indices.
-    """
-    x_train = load_variable("x_train")
-    y_train = load_variable("y_train")
-    x_val = load_variable("x_val")
-    y_val = load_variable("y_val")
-
-    with open(join(TOKENIZED_PATH, "char_index.txt"), 'r') as file:
-        data = file.read()
-
-    char_index = json.loads(data)
-
-    return x_train, y_train, x_val, y_val, char_index
+def load_data():
+    RAW_DATA_PATH = directories["raw_outputs_dir"]
 
 
+    # raw_x_train_path = os.path.join("raw_x_train.txt")
+    # raw_x_val_path = os.path.join( "raw_x_val.txt")
+    # raw_y_train_path = os.path.join( "raw_y_train.txt")
+    # raw_y_val_path = os.path.join( "raw_y_val.txt")
+    try:
+        raw_x_train = load_variable("raw_x_train.txt")
+        raw_y_train = load_variable("raw_y_train.txt")
+        raw_x_val = load_variable("raw_x_val.txt")
+        raw_y_val = load_variable("raw_y_val.txt")
+
+        config = {
+            'lower': True,
+            'char_level': True,
+            'oov_token': '-n-',
+            'sequence_length': 200
+        }
+
+        preprocessor = TextPreprocessor(config)
+        combined_texts = [str(text) for text in raw_x_train + raw_x_val]
+        preprocessor.fit_text(combined_texts)
+
+        x_train = preprocessor.transform_text(raw_x_train)
+        x_val = preprocessor.transform_text(raw_x_val)
+        char_index = preprocessor.tokenizer.word_index
+
+        encoder = LabelEncoder()
+        all_labels = raw_y_train + raw_y_val  # Combine all labels
+        encoder.fit(all_labels)  # Fit encoder on all possible labels
+        y_train = encoder.transform(raw_y_train)
+        y_val = encoder.transform(raw_y_val)
+
+        return x_train, y_train, x_val, y_val, char_index
+    except Exception as e:
+        logging.error(f"Failed to load or process data: {e}")
+        raise
 def define_params():
     """
     Define model parameters by reading them from a configuration file.
@@ -147,7 +170,7 @@ def main():
     Main function to define, train, and save the model.
     """
     params = define_params()
-    x_train, y_train, x_val, y_val, char_index = load_tokenized_data()
+    x_train, y_train, x_val, y_val, char_index = load_data()
     model = define_model(params, char_index)
 
     model = train_model(model, params, x_train, y_train, x_val, y_val)

@@ -23,7 +23,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Install lib-ml
-      run: pip inSstall lib-ml
+      run: pip install .
 
     - name: Lint with flake8
       run: |
@@ -34,7 +34,7 @@ jobs:
     - name: Lint with pylint
       run: |
         pip install pylint
-        pylint --errors-only module_name
+        pylint --errors-only .
 
     - name: Test with pytest
       run: |
@@ -45,3 +45,4 @@ jobs:
       run: |
         python train_model.py
         # Add commands to upload model to a cloud or save it with a public link
+        # Example: aws s3 cp model.pkl s3://yourbucket/model.pkl --acl public-read

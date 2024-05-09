@@ -1,28 +1,49 @@
+
 """Module for evaluating the trained model on test set"""
 
 import numpy as np
-from tensorflow.keras.models import load_model
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from config_reader import ConfigReader
 from utils import load_variable
+import logging
+from lib_ml.preprocessing import TextPreprocessor
+from sklearn.preprocessing import LabelEncoder
+from tensorflow.keras.models import load_model
+from tensorflow.keras.optimizers import Adam
+
+directories = ConfigReader().params["directories"]
+MODEL_PATH = directories["model_path"]
+model = load_model(MODEL_PATH)
+model.compile(
+    optimizer=Adam(),
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
 
 directories = ConfigReader().params["directories"]
 MODEL_PATH, TOKENIZED_PATH = directories["model_path"], directories["tokenized_outputs_dir"]
 
 
 def load_test_dataset():
-    """
-    Load the test dataset.
+    try:
+        # Assume raw_x_test and raw_y_test are the correct raw data filenames
+        x_test = load_variable("raw_x_test.txt")
+        y_test = load_variable("raw_y_test.txt")
 
-    Returns:
-        tuple: A tuple containing test data and labels:
-            - x_test (numpy.ndarray): Tokenized and padded sequences of input test data.
-            - y_test (numpy.ndarray): Encoded labels for test data.
-    """
-    x_test = load_variable("x_test")
-    y_test = load_variable("y_test")
+        # Apply preprocessing if necessary
+        # Assuming that TextPreprocessor has methods like fit_text and transform_text
+        preprocessor = TextPreprocessor(config={'lower': True, 'char_level': True, 'oov_token': '-n-', 'sequence_length': 200})
+        preprocessor.fit_text(x_test)  # Only if you need to fit the tokenizer
+        x_test = preprocessor.transform_text(x_test)
 
-    return x_test, y_test
+        # Assuming LabelEncoder usage if labels are categorical
+        encoder = LabelEncoder()
+        y_test = encoder.fit_transform(y_test)  # Ensure labels are fitted correctly or pre-fitted
+
+        return x_test, y_test
+    except Exception as e:
+        logging.error(f"Failed to load or process test datasets: {str(e)}")
+        raise
 
 
 def load_tf_model():
@@ -37,30 +58,28 @@ def load_tf_model():
 
 
 def predict(model, x_test, y_test):
-    """
-    Make predictions using the trained model and print evaluation metrics.
-
-    Args:
-        model (keras.models.Model): The trained model.
-        x_test (numpy.ndarray): Tokenized and padded sequences of input test data.
-        y_test (numpy.ndarray): Encoded labels for test data.
-    """
     y_pred = model.predict(x_test, batch_size=1000)
+    print("Raw predictions:", y_pred)
 
-    # Convert predicted probabilities to binary labels
-    y_pred_binary = (np.array(y_pred) > 0.5).astype(int)
+    # Consider using a different threshold or method to determine class labels
+    threshold = 0.5  # Adjust based on analysis
+    y_pred_binary = (y_pred > threshold).astype(int)
     y_test = y_test.reshape(-1, 1)
 
-    # Calculate classification report
-    report = classification_report(y_test, y_pred_binary)
     print('Classification Report:')
-    print(report)
+    try:
+        report = classification_report(y_test, y_pred_binary, zero_division=1)
+        print(report)
+    except ValueError as e:
+        print("Error in generating report:", e)
 
-    # Calculate confusion matrix
-    confusion_mat = confusion_matrix(y_test, y_pred_binary)
-    print('Confusion Matrix:', confusion_mat)
-    print('Accuracy:', accuracy_score(y_test, y_pred_binary))
-
+    print('Confusion Matrix:')
+    try:
+        confusion_mat = confusion_matrix(y_test, y_pred_binary)
+        print(confusion_mat)
+        print('Accuracy:', accuracy_score(y_test, y_pred_binary))
+    except ValueError as e:
+        print("Error in generating confusion matrix:", e)
 
 def main():
     """

@@ -1,4 +1,5 @@
 """Module containing global helper utility functions"""
+import pandas as pd
 
 import numpy as np
 from config_reader import ConfigReader
@@ -6,17 +7,12 @@ from os.path import join
 
 directories = ConfigReader().params["directories"]
 TOKENIZED_PATH = directories["tokenized_outputs_dir"]
+RAW_DATA_PATH = directories["raw_outputs_dir"]
 
 
 def load_variable(filename):
-    """
-    Load a variable from a text file.
-
-    Args:
-        filename (str): The name of the file to load from (without extension).
-
-    Returns:
-        numpy.ndarray: The variable loaded from the file.
-    """
-    file_path = join(TOKENIZED_PATH, filename + ".txt")
-    return np.loadtxt(file_path)
+    file_path = join(RAW_DATA_PATH , filename )
+  #  data = pd.read_csv(file_path, header=None)
+    with open(file_path, 'r', encoding='utf-8') as file:
+        data = file.read().splitlines()
+    return data
