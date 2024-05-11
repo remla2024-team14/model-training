@@ -120,17 +120,6 @@ def define_model(params, char_index):
 
 
 def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
-    """Train the defined model and save the tokenizer.
-
-    Args:
-        model (keras.models.Sequential): The model to train.
-        params (dict): A dictionary containing model parameters.
-        x_train (numpy.ndarray): Tokenized and padded sequences of input training data.
-        y_train (numpy.ndarray): Encoded labels for training data.
-        x_val (numpy.ndarray): Tokenized and padded sequences of input validation data.
-        y_val (numpy.ndarray): Encoded labels for validation data.
-        preprocessor (TextPreprocessor): The preprocessor object containing the tokenizer.
-    """
     model.compile(loss=params['loss_function'],
                   optimizer=params['optimizer'], metrics=['accuracy', Precision(), Recall()])
 
@@ -140,7 +129,6 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
                      shuffle=True,
                      validation_data=(x_val, y_val))
 
-    # Save the tokenizer
     tokenizer_path = 'outputs/tokenizer.pkl' 
     with open(tokenizer_path, 'wb') as handle:
         pickle.dump(preprocessor.tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
