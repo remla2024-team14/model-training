@@ -1,6 +1,6 @@
 tensorflow==2.12.1
 boto3==1.34.95
-keras==3.3.3
+keras==2.15.0
 numpy==1.26.0
 scikit-learn==1.4.2
 python-dotenv==1.0.1
