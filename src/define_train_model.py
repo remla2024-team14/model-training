@@ -10,7 +10,7 @@ import json
 from config_reader import ConfigReader
 from sklearn.preprocessing import LabelEncoder
 import logging
-
+import pickle
 from lib_ml.preprocessing import TextPreprocessor
 
 directories = ConfigReader().params["directories"]
@@ -58,12 +58,12 @@ def load_data():
         char_index = preprocessor.tokenizer.word_index
 
         encoder = LabelEncoder()
-        all_labels = raw_y_train + raw_y_val  # Combine all labels
-        encoder.fit(all_labels)  # Fit encoder on all possible labels
+        all_labels = raw_y_train + raw_y_val
+        encoder.fit(all_labels)
         y_train = encoder.transform(raw_y_train)
         y_val = encoder.transform(raw_y_val)
 
-        return x_train, y_train, x_val, y_val, char_index
+        return x_train, y_train, x_val, y_val, char_index, preprocessor
     except Exception as e:
         logging.error(f"Failed to load or process data: {e}")
         raise
@@ -125,8 +125,8 @@ def define_model(params, char_index):
     return model
 
 
-def train_model(model, params, x_train, y_train, x_val, y_val):
-    """Train the defined model.
+def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
+    """Train the defined model and save the tokenizer.
 
     Args:
         model (keras.models.Sequential): The model to train.
@@ -135,9 +135,7 @@ def train_model(model, params, x_train, y_train, x_val, y_val):
         y_train (numpy.ndarray): Encoded labels for training data.
         x_val (numpy.ndarray): Tokenized and padded sequences of input validation data.
         y_val (numpy.ndarray): Encoded labels for validation data.
-
-    Returns:
-        keras.models.Sequential: The trained model.
+        preprocessor (TextPreprocessor): The preprocessor object containing the tokenizer.
     """
     model.compile(loss=params['loss_function'],
                   optimizer=params['optimizer'], metrics=['accuracy', Precision(), Recall()])
@@ -147,6 +145,11 @@ def train_model(model, params, x_train, y_train, x_val, y_val):
                      epochs=params['epoch'],
                      shuffle=True,
                      validation_data=(x_val, y_val))
+
+    # Save the tokenizer
+    tokenizer_path = 'outputs/tokenizer.pkl' 
+    with open(tokenizer_path, 'wb') as handle:
+        pickle.dump(preprocessor.tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     metrics = {
         "accuracy": hist.history['accuracy'][-1],
@@ -170,12 +173,11 @@ def main():
     Main function to define, train, and save the model.
     """
     params = define_params()
-    x_train, y_train, x_val, y_val, char_index = load_data()
+    x_train, y_train, x_val, y_val, char_index, preprocessor = load_data()
     model = define_model(params, char_index)
 
-    model = train_model(model, params, x_train, y_train, x_val, y_val)
+    model = train_model(model, params, x_train, y_train, x_val, y_val, preprocessor)
     model.save(MODEL_PATH)
-
 
 if __name__ == "__main__":
     main()

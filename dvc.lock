@@ -33,28 +33,32 @@ stages:
       hash: md5
       md5: 57edfe43f25f9777fd980d6a56cb6c09
       size: 628
-    - path: outputs/tokenized/
+    - path: outputs/raw/
       hash: md5
-      md5: a7f4fee33d368b78600de26f022a708a.dir
-      size: 862021810
-      nfiles: 7
+      md5: 1192a8cfa564b0e0874343c2ad07202d.dir
+      size: 184455287
+      nfiles: 6
     - path: src/define_train_model.py
       hash: md5
-      md5: c1892ef610f9d64c2ce4b51d5dee2e2d
-      size: 6078
+      md5: eda1651fa12628a5592d49096218841a
+      size: 6401
     outs:
     - path: outputs/metrics/metrics.json
       hash: md5
-      md5: 95e89b4bfb05e49d1e34bb0d14da1764
+      md5: 2cd0c1c86d7ef4ec95cea7619ca9efd7
       size: 172
     - path: outputs/model.h5
       hash: md5
-      md5: fa8ec647fbfaa7434909f45af6e30b72
+      md5: 619b806cb20c0ebf40f36bfc62dee214
       size: 5482416
   predict:
     cmd: python src/predict.py
     deps:
+    - path: outputs/model.h5
+      hash: md5
+      md5: 619b806cb20c0ebf40f36bfc62dee214
+      size: 5482416
     - path: src/predict.py
       hash: md5
-      md5: ca3c18d63cb8aca001052c8b9371a62c
-      size: 3135
+      md5: 1b05c928612495c7274fe5da04be79dd
+      size: 2397
