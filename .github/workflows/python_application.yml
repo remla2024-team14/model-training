@@ -29,12 +29,14 @@ jobs:
       run: |
         pip install flake8
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        if [ $? -ne 0 ]; then exit 1; fi
+        flake8 . --count --max-complexity=10 --max-line-length=127 --statistics
+        if [ $? -ne 0 ]; then exit 1; fi
 
     - name: Lint with pylint
       run: |
         pip install pylint
-        pylint --errors-only .
+        pylint --fail-under=7 .
 
     - name: Test with pytest
       run: |
