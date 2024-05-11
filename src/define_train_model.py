@@ -30,12 +30,6 @@ logging.basicConfig(level=logging.DEBUG,
 
 def load_data():
     RAW_DATA_PATH = directories["raw_outputs_dir"]
-
-
-    # raw_x_train_path = os.path.join("raw_x_train.txt")
-    # raw_x_val_path = os.path.join( "raw_x_val.txt")
-    # raw_y_train_path = os.path.join( "raw_y_train.txt")
-    # raw_y_val_path = os.path.join( "raw_y_val.txt")
     try:
         raw_x_train = load_variable("raw_x_train.txt")
         raw_y_train = load_variable("raw_y_train.txt")
