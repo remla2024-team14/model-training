@@ -1,5 +1,5 @@
 """Module for defining model architecture and training the model"""
-import numpy as np
+# import numpy as np
 from keras.models import Sequential
 from keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense, Dropout
 from keras.metrics import Precision, Recall
@@ -28,8 +28,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode='w',
                     encoding='utf-8')
 
+
 def load_data():
-    RAW_DATA_PATH = directories["raw_outputs_dir"]
     try:
         raw_x_train = load_variable("raw_x_train.txt")
         raw_y_train = load_variable("raw_y_train.txt")
@@ -61,13 +61,9 @@ def load_data():
     except Exception as e:
         logging.error(f"Failed to load or process data: {e}")
         raise
-def define_params():
-    """
-    Define model parameters by reading them from a configuration file.
 
-    Returns:
-        dict: A dictionary containing model parameters.
-    """
+
+def define_params():
     return ConfigReader().params["model_params"]
 
 
@@ -119,7 +115,7 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
                      shuffle=True,
                      validation_data=(x_val, y_val))
 
-    tokenizer_path = 'outputs/tokenizer.pkl' 
+    tokenizer_path = 'outputs/tokenizer.pkl'
     with open(tokenizer_path, 'wb') as handle:
         pickle.dump(preprocessor.tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -133,7 +129,6 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
         "loss": hist.history['loss'][-1],
         "val_loss": hist.history['val_loss'][-1]
     }
-
     with open(METRICS_PATH, 'w') as json_file:
         json.dump(metrics, json_file)
 
@@ -147,6 +142,7 @@ def main():
 
     model = train_model(model, params, x_train, y_train, x_val, y_val, preprocessor)
     model.save(MODEL_PATH)
+
 
 if __name__ == "__main__":
     main()

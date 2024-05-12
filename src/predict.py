@@ -1,17 +1,15 @@
-import numpy as np
+
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from config_reader import ConfigReader
-from utils import load_variable
 import logging
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 from lib_ml.preprocessing import TextPreprocessor
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.models import load_model
-from tensorflow.keras.optimizers import Adam
 import pickle
 
 directories = ConfigReader().params["directories"]
 MODEL_PATH = directories["model_path"]
+
 
 def load_test_dataset(file_path):
     with open('outputs/tokenizer.pkl', 'rb') as handle:
@@ -35,9 +33,13 @@ def load_test_dataset(file_path):
     else:
         logging.error("No valid data to process.")
         return None, None
+
+
 def load_tf_model():
     model = load_model(MODEL_PATH)
     return model
+
+
 def predict(model, x_test, y_test):
     if x_test is not None and y_test is not None:
         y_pred = model.predict(x_test, batch_size=1000)
@@ -52,6 +54,7 @@ def predict(model, x_test, y_test):
     else:
         print("No predictions to make, as input data is not valid.")
 
+
 def main():
     model = load_tf_model()
     x_test, y_test = load_test_dataset('data/val.txt')
@@ -59,6 +62,7 @@ def main():
         predict(model, x_test, y_test)
     else:
         print("Failed to load or process test data.")
+
 
 if __name__ == "__main__":
     main()
