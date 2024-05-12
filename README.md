@@ -25,7 +25,6 @@ pip install -r requirements.txt
 conda create --name <env_name> --file requirements.txt
 ```
 
-
 ### How To: Dependency Management with Poetry
 
 In your virtual environment, run `pip install pipx` followed by `python -m pipx install poetry`. Then, run `python -m pipx ensurepath` and restart your terminal/IDE.
@@ -38,15 +37,13 @@ To install the defined dependencies for this project, run:
 poetry install
 ```
 
-
 ### How To: Run DVC Pipeline
 
-To run the DVC pipeline (as configured in `dvc.yaml`), firstly make sure you have DVC installed in your working environment. 
+To run the DVC pipeline (as configured in `dvc.yaml`), firstly make sure you have DVC installed in your working environment.
 
 To run the pipeline, simply use the command `dvc repro`.
 
 Check the [DVC documentation](https://dvc.org/doc/start) for further details and additional possibilities.
-
 
 ### How To: DVC Remotes
 
@@ -59,6 +56,7 @@ AWS_BUCKET_NAME=<bucket_name>
 ```
 
 If you want to setup a remote run:
+
 ```
 dvc remote add -d myremote s3://<bucket>/<key>
 ```
@@ -72,16 +70,15 @@ dvc remote modify --local <myremote-name> secret_access_key '<aws_secret_access_
 
 You can push artefacts to the remote by running `dvc push`. Similarly, pulling from the remote can be performed by running `dvc pull`.
 
-## How To: DVC Experiment Management 
+## How To: DVC Experiment Management
 
 In this project, DVC is also used to report metrics and keep track of different experiments/models.
 
-Run the experiment using `dvc exp run`. See the difference by running `dvc metrics diff`.
+Run the experiment using `dvc exp run`. See the difference by running `dvc metrics diff`.Please install the latest version of dvc locally`pip install -U dvc`,otherwise it may lead to version incompatibility and other problems.
 
 Whenever anything is changed in the project, a new experiment can be run and the experiment log can be checked using `dvc exp show`.
 
 All metrics will be generated to an output file named `metrics.json`.
-
 
 ## Code Quality
 
@@ -103,21 +100,18 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 ```
 
 In Pylint's configuration file `pylintrc`, we have thoroughly analysed linter rules and made the following modifications to adapt it to this specific ML project:
+
 - We allow the following commonly used variable names in ML: `X_train`,`Y_train`,
-           `X_test` and
-           `Y_test`
+  `X_test` and
+  `Y_test`
 - To discourage non-informative variable names, we defined a set of bad names: `bad-names=foo, baz, toto, tutu, tata, x, y, z, var, vars`
 - We extend the list of exceptions that will emit a warning with `ArithmeticError`, `BufferError` and `LookupError` - especially common in ML projects
-- We ignore files that are either auto-generated or do not contain Python code: `ignore=CVS, .git, __pycache__, build, dist, .gitignore, requirements.txt, config.json` 
+- We ignore files that are either auto-generated or do not contain Python code: `ignore=CVS, .git, __pycache__, build, dist, .gitignore, requirements.txt, config.json`
 - We only show warnings with high confidence levels and those that lead to inference errors (`confidence=HIGH, INFERENCE_FAILURE`)
 
 ### Flake8
 
-To analyse our Python code using Flake8, we run `flake8 --max-line-length 100`. This will configure the maximum allowed line length to 100 (in line with Pylint), instead of the 88 which is the default. 
-
-
-
-
+To analyse our Python code using Flake8, we run `flake8 --max-line-length 100`. This will configure the maximum allowed line length to 100 (in line with Pylint), instead of the 88 which is the default.
 
 ## Contributors
 
