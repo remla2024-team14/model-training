@@ -72,16 +72,6 @@ def define_params():
 
 
 def define_model(params, char_index):
-    """
-    Define the architecture of the model as CNN with dropout layers for model regularization.
-
-    Args:
-        params (dict): A dictionary containing model parameters.
-        char_index (dict): A dictionary mapping characters to their indices.
-
-    Returns:
-        keras.models.Sequential: The defined model.
-    """
     model = Sequential()
 
     voc_size = len(char_index.keys())
@@ -151,9 +141,6 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
 
 
 def main():
-    """
-    Main function to define, train, and save the model.
-    """
     params = define_params()
     x_train, y_train, x_val, y_val, char_index, preprocessor = load_data()
     model = define_model(params, char_index)
