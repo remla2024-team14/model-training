@@ -40,25 +40,25 @@ stages:
       nfiles: 6
     - path: src/define_train_model.py
       hash: md5
-      md5: dcb06acd00f71b5849cf14f4c2fc5ee7
-      size: 5058
+      md5: 93c19170993f2adcfbcaa5e07224543f
+      size: 4460
     outs:
     - path: outputs/metrics/metrics.json
       hash: md5
-      md5: c049dd8d0774a9b44da936c5b52fc9f8
+      md5: b2cb589389d7d988a930c08efd218571
       size: 172
     - path: outputs/model.h5
       hash: md5
-      md5: d16deabcb3ad6b8dd39747de71e96567
-      size: 5482416
+      md5: 29c82e6309d058284f5204f40c010d6c
+      size: 1519656
   predict:
     cmd: python src/predict.py
     deps:
     - path: outputs/model.h5
       hash: md5
-      md5: d16deabcb3ad6b8dd39747de71e96567
-      size: 5482416
+      md5: 29c82e6309d058284f5204f40c010d6c
+      size: 1519656
     - path: src/predict.py
       hash: md5
-      md5: 1b05c928612495c7274fe5da04be79dd
-      size: 2397
+      md5: e016971347a75f2c962f98e57ff8ea87
+      size: 2249
