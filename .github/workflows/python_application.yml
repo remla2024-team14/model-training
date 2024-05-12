@@ -14,20 +14,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python 3.8
+    - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
     - name: Debug current directory and list files
       run: |
         echo "Current working directory:"
         pwd
         echo "List of files in the current directory:"
         ls -la
-
-    - name: Print requirements.txt
-      run: cat requirements.txt
-      
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
