@@ -5,17 +5,17 @@ stages:
       - src/get_data.py
     outs:
       - outputs/raw/
-  tokenize_data:
-    cmd: python src/tokenize_data.py
-    deps:
-      - src/tokenize_data.py
-    outs:
-      - outputs/tokenized/
+#  tokenize_data:
+#    cmd: python src/tokenize_data.py
+#    deps:
+#      - src/tokenize_data.py
+#    outs:
+#      - outputs/tokenized/
   define_train_model:
     cmd: python src/define_train_model.py
     deps:
       - src/define_train_model.py
-      - outputs/tokenized/  # Relies on processed datasets
+      - outputs/raw/  # Relies on processed datasets
       - config.json  # Files containing training configurations
     outs:
       - outputs/model.h5  # Model output path
@@ -25,3 +25,4 @@ stages:
     cmd: python src/predict.py
     deps:
       - src/predict.py
+      - outputs/model.h5

@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/get_data.py
       hash: md5
-      md5: 9f2c730f5812b88f5926f90465175b78
-      size: 2202
+      md5: 9affff29754dc467491304ec67f65e2d
+      size: 2282
     outs:
     - path: outputs/raw/
       hash: md5
@@ -18,43 +18,47 @@ stages:
     deps:
     - path: src/tokenize_data.py
       hash: md5
-      md5: 581013d3d14e667f1348ad00f6d346c3
-      size: 2512
+      md5: 17f30df0cd033f543713ac9d69a878f3
+      size: 4380
     outs:
     - path: outputs/tokenized/
       hash: md5
-      md5: 01c0c42f8b3c0b2883d6afe43bc2d35c.dir
-      size: 862021815
+      md5: a7f4fee33d368b78600de26f022a708a.dir
+      size: 862021810
       nfiles: 7
   define_train_model:
     cmd: python src/define_train_model.py
     deps:
     - path: config.json
       hash: md5
-      md5: 580f010ab18b398328fb139788dcb0de
-      size: 627
-    - path: outputs/tokenized/
+      md5: 57edfe43f25f9777fd980d6a56cb6c09
+      size: 628
+    - path: outputs/raw/
       hash: md5
-      md5: 01c0c42f8b3c0b2883d6afe43bc2d35c.dir
-      size: 862021815
-      nfiles: 7
+      md5: 1192a8cfa564b0e0874343c2ad07202d.dir
+      size: 184455287
+      nfiles: 6
     - path: src/define_train_model.py
       hash: md5
-      md5: 219fc6b4a000a5866dae0e47530c9822
-      size: 3507
+      md5: dcb06acd00f71b5849cf14f4c2fc5ee7
+      size: 5058
     outs:
     - path: outputs/metrics/metrics.json
       hash: md5
-      md5: 0585d5e771d479006ed5fb9f10531386
-      size: 264
+      md5: c049dd8d0774a9b44da936c5b52fc9f8
+      size: 172
     - path: outputs/model.h5
       hash: md5
-      md5: 8d9a244183a97fde13f05cc529498f88
-      size: 5483016
+      md5: d16deabcb3ad6b8dd39747de71e96567
+      size: 5482416
   predict:
     cmd: python src/predict.py
     deps:
+    - path: outputs/model.h5
+      hash: md5
+      md5: d16deabcb3ad6b8dd39747de71e96567
+      size: 5482416
     - path: src/predict.py
       hash: md5
-      md5: dad6262777b4232871440532f57572d1
-      size: 1480
+      md5: 1b05c928612495c7274fe5da04be79dd
+      size: 2397
