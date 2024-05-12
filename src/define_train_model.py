@@ -14,11 +14,9 @@ import pickle
 from lib_ml.preprocessing import TextPreprocessor
 
 directories = ConfigReader().params["directories"]
-
 TOKENIZED_PATH = directories["tokenized_outputs_dir"]
 MODEL_PATH = directories["model_path"]
 METRICS_PATH = join(directories["metrics_file"])
-
 metrics_dir = os.path.dirname(METRICS_PATH)
 os.makedirs(metrics_dir, exist_ok=True)
 
@@ -42,26 +40,17 @@ def load_data():
             'oov_token': '-n-',
             'sequence_length': 200
         }
-
         preprocessor = TextPreprocessor(config)
         combined_texts = [str(text) for text in raw_x_train + raw_x_val]
         preprocessor.fit_text(combined_texts)
-
         x_train = preprocessor.transform_text(raw_x_train)
         x_val = preprocessor.transform_text(raw_x_val)
-
-
-        print(f"Shape of x_train: {x_train.shape}")
-        print(f"Shape of x_val: {x_val.shape}")
-
-
         char_index = preprocessor.tokenizer.word_index
         encoder = LabelEncoder()
         all_labels = raw_y_train + raw_y_val
         encoder.fit(all_labels)
         y_train = encoder.transform(raw_y_train)
         y_val = encoder.transform(raw_y_val)
-
         return x_train, y_train, x_val, y_val, char_index, preprocessor
     except Exception as e:
         logging.error(f"Failed to load or process data: {e}")
@@ -77,19 +66,14 @@ def define_model(params, char_index):
     voc_size = len(char_index) + 1
     model.add(
         Embedding(input_dim=voc_size, output_dim=params['embedding_dimension'], input_length=params['sequence_length']))
-
     model.add(Conv1D(128, 3, activation='relu', padding='same'))
     model.add(MaxPooling1D(3))
     model.add(Conv1D(128, 3, activation='relu', padding='same'))
     model.add(MaxPooling1D(3))
-
     model.add(Dropout(0.2))
-
     model.add(Conv1D(128, 3, activation='relu', padding='same'))
     model.add(MaxPooling1D(3))
-
     model.add(Flatten())
-
     model.add(Dense(1, activation='sigmoid'))  # Change here for binary classification
 
     return model
@@ -104,11 +88,9 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
                      epochs=params['epoch'],
                      shuffle=True,
                      validation_data=(x_val, y_val))
-
     tokenizer_path = 'outputs/tokenizer.pkl'
     with open(tokenizer_path, 'wb') as handle:
         pickle.dump(preprocessor.tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
     metrics = {
         "accuracy": hist.history['accuracy'][-1],
         "val_accuracy": hist.history['val_accuracy'][-1],
@@ -121,17 +103,12 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
     }
     with open(METRICS_PATH, 'w') as json_file:
         json.dump(metrics, json_file)
-
     return model
 
 
 def main():
     params = define_params()
-    print("Model parameters loaded:", params)
     x_train, y_train, x_val, y_val, char_index, preprocessor = load_data()
-    print("Character index size:", len(char_index))
-
-
     model = define_model(params, char_index)
     model = train_model(model, params, x_train, y_train, x_val, y_val, preprocessor)
     model.save(MODEL_PATH)
