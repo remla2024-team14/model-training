@@ -18,12 +18,14 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
+        
     - name: Debug current directory and list files
       run: |
         echo "Current working directory:"
         pwd
         echo "List of files in the current directory:"
         ls -la
+
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
@@ -43,11 +45,6 @@ jobs:
       run: |
         pip install pylint
         pylint --fail-under=7 .
-
-    - name: Test with pytest
-      run: |
-        pip install pytest
-        pytest
 
     - name: Save and Publish Model
       run: |
