@@ -49,8 +49,13 @@ def load_data():
 
         x_train = preprocessor.transform_text(raw_x_train)
         x_val = preprocessor.transform_text(raw_x_val)
-        char_index = preprocessor.tokenizer.word_index
 
+
+        print(f"Shape of x_train: {x_train.shape}")
+        print(f"Shape of x_val: {x_val.shape}")
+
+
+        char_index = preprocessor.tokenizer.word_index
         encoder = LabelEncoder()
         all_labels = raw_y_train + raw_y_val
         encoder.fit(all_labels)
@@ -69,38 +74,23 @@ def define_params():
 
 def define_model(params, char_index):
     model = Sequential()
+    voc_size = len(char_index) + 1
+    model.add(
+        Embedding(input_dim=voc_size, output_dim=params['embedding_dimension'], input_length=params['sequence_length']))
 
-    voc_size = len(char_index.keys())
-    model.add(Embedding(voc_size + 1, 50))
-
-    model.add(Conv1D(128, 3, activation='tanh'))
+    model.add(Conv1D(128, 3, activation='relu', padding='same'))
     model.add(MaxPooling1D(3))
-    model.add(Dropout(0.2))
-
-    model.add(Conv1D(128, 7, activation='tanh', padding='same'))
-    model.add(Dropout(0.2))
-
-    model.add(Conv1D(128, 5, activation='tanh', padding='same'))
-    model.add(Dropout(0.2))
-
-    model.add(Conv1D(128, 3, activation='tanh', padding='same'))
+    model.add(Conv1D(128, 3, activation='relu', padding='same'))
     model.add(MaxPooling1D(3))
+
     model.add(Dropout(0.2))
 
-    model.add(Conv1D(128, 5, activation='tanh', padding='same'))
-    model.add(Dropout(0.2))
-
-    model.add(Conv1D(128, 3, activation='tanh', padding='same'))
+    model.add(Conv1D(128, 3, activation='relu', padding='same'))
     model.add(MaxPooling1D(3))
-    model.add(Dropout(0.2))
-
-    model.add(Conv1D(128, 3, activation='tanh', padding='same'))
-    model.add(MaxPooling1D(3))
-    model.add(Dropout(0.2))
 
     model.add(Flatten())
 
-    model.add(Dense(len(params['categories']) - 1, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid'))  # Change here for binary classification
 
     return model
 
@@ -137,9 +127,12 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
 
 def main():
     params = define_params()
+    print("Model parameters loaded:", params)
     x_train, y_train, x_val, y_val, char_index, preprocessor = load_data()
-    model = define_model(params, char_index)
+    print("Character index size:", len(char_index))
 
+
+    model = define_model(params, char_index)
     model = train_model(model, params, x_train, y_train, x_val, y_val, preprocessor)
     model.save(MODEL_PATH)
 
