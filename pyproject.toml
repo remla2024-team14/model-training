@@ -1,9 +1,9 @@
-[tool.poetry]
-name = "lib-ml"
-version = "1.0.14"
-description = ""
-authors = ["Your Name <you@example.com>"]
-readme = "README.md"
+#[tool.poetry]
+#name = "lib-ml"
+#version = "1.0.14"
+#description = ""
+#authors = ["Your Name <you@example.com>"]
+#readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
