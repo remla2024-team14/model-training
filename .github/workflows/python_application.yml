@@ -24,6 +24,10 @@ jobs:
         pwd
         echo "List of files in the current directory:"
         ls -la
+
+    - name: Print requirements.txt
+      run: cat requirements.txt
+      
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
