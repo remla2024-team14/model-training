@@ -113,6 +113,10 @@ In Pylint's configuration file `pylintrc`, we have thoroughly analysed linter ru
 
 To analyse our Python code using Flake8, we run `flake8 --max-line-length 100`. This will configure the maximum allowed line length to 100 (in line with Pylint), instead of the 88 which is the default.
 
+### PyTest
+
+To run the tests run `pytest` in the terminal.
+
 ## Contributors
 
 - Dani Rogmans
