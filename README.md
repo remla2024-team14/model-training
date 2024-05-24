@@ -115,7 +115,15 @@ To analyse our Python code using Flake8, we run `flake8 --max-line-length 100`. 
 
 ### PyTest
 
-To run the tests run `pytest` in the terminal.
+When using PyTest, passing arguments to methods require `@pytest.mark.parametrize` and `pytest.fixture`.
+PyTest will run the test for each parameter.
+
+We use PyTest-monitor to check the memory usage.
+*Note: `pytest-monitor` updates its SQLite database incrementally, so delete monitor.db file between test runs.*
+
+To run the tests run `pytest --db ./monitor.db`
+
+To view memory usage of each test in terminal run `sqlite3 ./monitor.db`, then `.headers on`, then `.mode column` and at last `select ITEM, MEM_USAGE from TEST_METRICS ORDER BY MEM_USAGE DESC LIMIT 10;`
 
 ## Contributors
 
