@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 import pytest
 from tensorflow.keras.models import load_model
 from lib_ml.preprocessing import TextPreprocessor
@@ -41,7 +39,6 @@ def test_model_memory_usage(model_setup):
     assert result > 0.5
 
 
-
 @pytest.mark.parametrize("model_setup", [("")], indirect=True)
 def test_empty_string(model_setup):
     model, url = model_setup
@@ -49,6 +46,7 @@ def test_empty_string(model_setup):
         result = model.predict(url)
 
     assert "'NoneType' object has no attribute 'shape'" in str(exc_info.value)
+
 
 @pytest.mark.parametrize("model_setup", [("aoiwjdao.com"), ("oaiwd.com")], indirect=True)
 def test_multiple_spam(model_setup):
