@@ -43,7 +43,7 @@ def test_model_memory_usage(model_setup):
 def test_empty_string(model_setup):
     model, url = model_setup
     with pytest.raises(AttributeError) as exc_info:
-        result = model.predict(url)
+        model.predict(url)
 
     assert "'NoneType' object has no attribute 'shape'" in str(exc_info.value)
 
