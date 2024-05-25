@@ -81,3 +81,100 @@ def test_empty_string(model_setup):
     assert "'NoneType' object has no attribute 'shape'" in str(exc_info.value)
 
 
+@pytest.fixture()
+def create_df():
+    def read_data(file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data1 = file.read().splitlines()
+        return data1
+
+    urls = read_data("data/train.txt")
+
+    data = {'class': [], 'url': []}
+    for entry in urls:
+        parts = entry.split('\t', 1)
+        if len(parts) == 2:
+            class_label, url = parts
+            data['class'].append(class_label)
+            data['url'].append(url.strip())
+
+    df = pd.DataFrame(data)
+
+    def count_segments(segmented_url):
+        parsed_url = urlparse(segmented_url)
+        path = parsed_url.path
+        return path.count('/') if path else 0
+
+    # Add new features
+    df['no_char'] = df['url'].apply(len)
+    df['segments'] = df['url'].apply(count_segments)
+
+    return df
+
+
+output_dir = './outputs/plots'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+
+def plot_kde(df, x_col, hue_col, title, xlabel, ylabel, filename, fill=True, alpha=0.5, palette="viridis", linewidth=2):
+    plt.figure(figsize=(10, 6))
+    sns.kdeplot(data=df, x=x_col, hue=hue_col, fill=fill, alpha=alpha, palette=palette, linewidth=linewidth)
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.grid(True)
+    plt.savefig(f'{output_dir}/{filename}')
+    plt.close()
+
+
+# Create plots of the features and save them in outputs/plots
+def test_no_char_vs_no_segments(create_df):
+    df = create_df
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(data=df, x='no_char', y='segments', hue='class', style='class', palette='viridis', s=100)
+    plt.title('Correlation between URL Length and Number of Segments')
+    plt.xlabel('Number of Characters (no_char)')
+    plt.ylabel('Number of Segments (segments)')
+    plt.legend(title='URL Class')
+    plt.grid(True)
+    plt.savefig(f'{output_dir}/no_char_vs_segments.png')
+    plt.close()
+
+
+def test_no_char(create_df):
+    df = create_df
+    plot_kde(df, 'no_char', 'class', 'Distribution of URL Character Count by Class', 'Number of Characters (no_char)',
+             'Density', 'no_char_distribution.png')
+
+
+def test_segments(create_df):
+    df = create_df
+    plot_kde(df, 'segments', 'class', 'Distribution of URL Segment Count by Class', 'Number of Segments', 'Density',
+             'segment_distribution.png')
+
+
+def test_data_distribution(create_df):
+    df = create_df
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    plt.figure(figsize=(8, 4))
+    ax = sns.countplot(data=df, x='class', palette='viridis')
+    plt.title('Distribution of Phishing and Legitimate URLs')
+    plt.xlabel('Class')
+    plt.ylabel('Count')
+    plt.xticks(rotation=0)
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+    total = float(len(df))
+
+    for p in ax.patches:
+        height = p.get_height()
+
+        percentage = '{:.1f}%'.format(100 * height / total)
+
+        ax.text(p.get_x() + p.get_width() / 2., height + 3, percentage, ha="center")
+
+    plt.savefig(f'{output_dir}/class_distribution.png')
+    plt.close()
