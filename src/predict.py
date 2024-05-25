@@ -1,6 +1,6 @@
 
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-from config_reader import ConfigReader
+from src.config_reader import ConfigReader
 import logging
 from lib_ml.preprocessing import TextPreprocessor
 from sklearn.preprocessing import LabelEncoder
@@ -51,6 +51,8 @@ def predict(model, x_test, y_test):
         print('Confusion Matrix:')
         print(confusion_matrix(y_test, y_pred_binary))
         print('Accuracy:', accuracy_score(y_test, y_pred_binary))
+
+        return y_pred_binary
     else:
         print("No predictions to make, as input data is not valid.")
 

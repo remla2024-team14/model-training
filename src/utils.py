@@ -1,4 +1,4 @@
-from config_reader import ConfigReader
+from src.config_reader import ConfigReader
 from os.path import join
 
 
