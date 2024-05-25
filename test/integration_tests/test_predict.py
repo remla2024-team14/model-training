@@ -10,6 +10,7 @@ class TestPredict(unittest.TestCase):
         binary_predictions = predict(model, x_test, y_test)
         self.assertTrue(x_test is not None)
         self.assertTrue(y_test is not None)
+        self.assertEqual(binary_predictions.shape[0], y_test.shape[0])
 
 
 if __name__ == "__main__":
