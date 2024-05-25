@@ -34,6 +34,16 @@ def load_data():
         raw_x_val = load_variable("raw_x_val.txt")
         raw_y_val = load_variable("raw_y_val.txt")
 
+
+        min_train_length = min(len(raw_x_train), len(raw_y_train))
+        raw_x_train = raw_x_train[:min_train_length]
+        raw_y_train = raw_y_train[:min_train_length]
+
+        min_val_length = min(len(raw_x_val), len(raw_y_val))
+        raw_x_val = raw_x_val[:min_val_length]
+        raw_y_val = raw_y_val[:min_val_length]
+
+
         config = {
             'lower': True,
             'char_level': True,
@@ -85,22 +95,34 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
 
     hist = model.fit(x_train, y_train,
                      batch_size=params['batch_train'],
+                     # batch_size=256, # slice
                      epochs=params['epoch'],
                      shuffle=True,
                      validation_data=(x_val, y_val))
+
+    history_keys = list(hist.history.keys())
+    accuracy_key = [key for key in history_keys if 'accuracy' in key and not 'val' in key][0]
+    val_accuracy_key = [key for key in history_keys if 'val_accuracy' in key][0]
+    precision_key = [key for key in history_keys if 'precision' in key and not 'val' in key][0]
+    val_precision_key = [key for key in history_keys if 'val_precision' in key][0]
+    recall_key = [key for key in history_keys if 'recall' in key and not 'val' in key][0]
+    val_recall_key = [key for key in history_keys if 'val_recall' in key][0]
+
     tokenizer_path = 'outputs/tokenizer.pkl'
     with open(tokenizer_path, 'wb') as handle:
         pickle.dump(preprocessor.tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
     metrics = {
-        "accuracy": hist.history['accuracy'][-1],
-        "val_accuracy": hist.history['val_accuracy'][-1],
-        "precision": hist.history['precision'][-1],
-        "val_precision": hist.history['val_precision'][-1],
-        "recall": hist.history['recall'][-1],
-        "val_recall": hist.history['val_recall'][-1],
+        "accuracy": hist.history[accuracy_key][-1],
+        "val_accuracy": hist.history[val_accuracy_key][-1],
+        "precision": hist.history[precision_key][-1],
+        "val_precision": hist.history[val_precision_key][-1],
+        "recall": hist.history[recall_key][-1],
+        "val_recall": hist.history[val_recall_key][-1],
         "loss": hist.history['loss'][-1],
         "val_loss": hist.history['val_loss'][-1]
     }
+
     with open(METRICS_PATH, 'w') as json_file:
         json.dump(metrics, json_file)
     return model
