@@ -3,10 +3,10 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-import pytest
 import numpy as np
 import tensorflow as tf
 from src.define_train_model import train_model, load_data, define_params, define_model
+
 
 def test_non_deterministic_behavior():
     def train_and_evaluate(seed):

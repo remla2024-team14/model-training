@@ -3,10 +3,10 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-import pytest
 import numpy as np
 from sklearn.model_selection import train_test_split
 from src.define_train_model import train_model, define_params, define_model, load_data
+
 
 def test_model_on_data_slices():
     x_train, y_train, x_val, y_val, char_index, preprocessor = load_data()
@@ -30,6 +30,7 @@ def test_model_on_data_slices():
     slice_score = model.evaluate(x_slice, y_slice)
 
     assert np.allclose(overall_score, slice_score, atol=0.1), "Model performance on data slice differs significantly from overall performance."
+
 
 if __name__ == "__main__":
     test_model_on_data_slices()

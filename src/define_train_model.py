@@ -1,5 +1,4 @@
 """Module for defining model architecture and training the model"""
-import numpy as np
 from keras.models import Sequential
 from keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense, Dropout
 from keras.metrics import Precision, Recall
@@ -40,7 +39,6 @@ def load_data():
         min_val_length = min(len(raw_x_val), len(raw_y_val))
         raw_x_val = raw_x_val[:min_val_length]
         raw_y_val = raw_y_val[:min_val_length]
-
 
         # If the dataset is too large to be loaded by your local machine, select some data were randomly for testing.
         # sample_size = 10000
