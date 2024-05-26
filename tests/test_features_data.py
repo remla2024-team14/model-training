@@ -1,12 +1,11 @@
-import os
 from urllib.parse import urlparse
-
-import boto3
-import pytest
 from botocore.exceptions import ClientError
 from matplotlib import pyplot as plt
 from tensorflow.keras.models import load_model
 from lib_ml.preprocessing import TextPreprocessor
+import boto3
+import os
+import pytest
 import pandas as pd
 import seaborn as sns
 
@@ -50,6 +49,16 @@ def test_multiple_spam(model_setup):
     assert result > 0.5
 
 
+# Test code that creates input features in both training and serving
+@pytest.mark.parametrize("model_setup", [""], indirect=True)
+def test_empty_string(model_setup):
+    model, url = model_setup
+    with pytest.raises(AttributeError) as exc_info:
+        model.predict(url)
+
+    assert "'NoneType' object has no attribute 'shape'" in str(exc_info.value)
+
+
 # Test that system maintains privacy controls across its entire data pipeline, this is the only way our data is
 # downloaded:
 def test_privacy():
@@ -64,23 +73,7 @@ def test_privacy():
     assert exc_info.value.response['Error']['Code'] == '403'
 
 
-# Test to measure how much memory it takes to setup the model and make 1 prediction, see readme
-@pytest.mark.parametrize("model_setup", ["aoiwjdao.com"], indirect=True)
-def test_model_memory_usage(model_setup):
-    model, url = model_setup
-    result = model.predict(url)
-    assert result > 0.5
-
-
-@pytest.mark.parametrize("model_setup", [""], indirect=True)
-def test_empty_string(model_setup):
-    model, url = model_setup
-    with pytest.raises(AttributeError) as exc_info:
-        model.predict(url)
-
-    assert "'NoneType' object has no attribute 'shape'" in str(exc_info.value)
-
-
+# Creates features for our dataset to show how testing features could be done
 @pytest.fixture()
 def create_df():
     def read_data(file_path):
