@@ -113,6 +113,20 @@ In Pylint's configuration file `pylintrc`, we have thoroughly analysed linter ru
 
 To analyse our Python code using Flake8, we run `flake8 --max-line-length 100`. This will configure the maximum allowed line length to 100 (in line with Pylint), instead of the 88 which is the default.
 
+### PyTest
+
+When using PyTest, passing arguments to methods require `@pytest.mark.parametrize` and `pytest.fixture`.
+PyTest will run the test for each parameter.
+
+We can use PyTest-monitor to check the memory usage.
+*Note: `pytest-monitor` updates its SQLite database incrementally, so delete monitor.db file between test runs.*
+
+To run the tests run `pytest --db ./monitor.db` or `pytest` if you do not want the monitor.db which is used to view things such as memory usage.
+
+To view memory usage of each test in terminal run `sqlite3 ./monitor.db`, then `.headers on`, then `.mode column` and at last `select ITEM, MEM_USAGE from TEST_METRICS ORDER BY MEM_USAGE DESC LIMIT 10;`
+
+The plots for the features and data are stored in outputs/plots. Since our dataset does not contain features, we made two features `no_char` which is the length of the URL and `segments` which is length of the path of the URL.
+
 ## Contributors
 
 - Dani Rogmans
