@@ -16,6 +16,8 @@ def model_setup(request):
 
     model = load_model('models/model.keras')
     return model, processed_texts
+
+
 @pytest.mark.parametrize("model_setup", ["aoiwjdao.com"], indirect=True)
 def test_model_memory_usage(model_setup):
     model, url = model_setup
