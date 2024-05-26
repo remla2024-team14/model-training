@@ -3,6 +3,7 @@ import json
 from src.config_reader import ConfigReader
 
 
+# Integration test
 class TestConfigReader(unittest.TestCase):
     def setUp(self):
         self.config_reader = ConfigReader().params

@@ -1,8 +1,8 @@
 import unittest
-import json
 from src.define_train_model import load_data, define_model, define_params
 
 
+# Integration test
 class TestDefineTrainModel(unittest.TestCase):
 
     def test_define_train_model(self):

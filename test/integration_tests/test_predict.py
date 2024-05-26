@@ -2,6 +2,7 @@ import unittest
 from src.predict import load_test_dataset, load_tf_model, predict
 
 
+# Integration test
 class TestPredict(unittest.TestCase):
 
     def test_predict(self):

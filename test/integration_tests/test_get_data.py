@@ -4,6 +4,7 @@ import os
 import shutil
 
 
+# Integration test
 class TestFetchData(unittest.TestCase):
     def setUp(self, folder_path="data"):
         if os.path.exists(folder_path):
