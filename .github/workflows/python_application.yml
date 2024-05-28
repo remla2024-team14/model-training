@@ -8,7 +8,7 @@ name: Python Application CI
 on: [push, pull_request]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,6 +33,25 @@ jobs:
     - name: Install lib-ml
       run: pip install .
 
+    - name: Run ML tests and generate coverage report
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      run: |
+        pytest --cov tests
+
+    - name: Publish model and show metrics
+      run: |
+        python src/define_train_model.py
+        # Add commands to upload model to a cloud or save it with a public link
+        # Example: aws s3 cp model.pkl s3://yourbucket/model.pkl --acl public-read
+  
+  stylecheck:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
     - name: Lint with flake8
       run: |
         pip install flake8
@@ -45,9 +64,3 @@ jobs:
       run: |
         pip install pylint
         pylint --fail-under=7 .
-
-    - name: Save and Publish Model
-      run: |
-        python src/define_train_model.py
-        # Add commands to upload model to a cloud or save it with a public link
-        # Example: aws s3 cp model.pkl s3://yourbucket/model.pkl --acl public-read

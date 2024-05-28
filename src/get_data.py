@@ -1,10 +1,12 @@
 """Module for loading raw train and test datasets, possibly from remote"""
+
 import json
 import os
 from os.path import join
 import boto3
 from dotenv import load_dotenv
-from config_reader import ConfigReader
+
+from src.config_reader import ConfigReader
 
 directories = ConfigReader().params["directories"]
 BASE_DIR, OUTPUTS_DIR = directories["base_dir"], directories["raw_outputs_dir"]
@@ -12,7 +14,8 @@ REMOTE = ConfigReader().params["remote_download"]
 
 load_dotenv()
 
-if REMOTE:
+
+def fetch_data_remotely():
     s3 = boto3.client('s3', aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
                       aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
     files_and_keys = {
@@ -30,6 +33,10 @@ if REMOTE:
         local_path = os.path.join(BASE_DIR, local_file)
         s3.download_file(os.getenv('AWS_BUCKET_NAME'), s3_key, local_path)
         print(f"Downloaded {s3_key} to {local_path}")
+
+
+if REMOTE:
+    fetch_data_remotely()
 
 train_dir = join(BASE_DIR, "train.txt")
 test_dir = join(BASE_DIR, "test.txt")

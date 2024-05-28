@@ -2,11 +2,11 @@
 from keras.models import Sequential
 from keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense, Dropout
 from keras.metrics import Precision, Recall
-from utils import load_variable
+from src.utils import load_variable
+from src.config_reader import ConfigReader
 import os
 from os.path import join
 import json
-from config_reader import ConfigReader
 from sklearn.preprocessing import LabelEncoder
 import logging
 import pickle
