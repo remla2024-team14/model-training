@@ -135,20 +135,22 @@ The plots for the features and data are stored in outputs/plots.
 
 #### Test Adequacy
 
-To inspect test coverage, run `pytest --cov=TEST_DIR`. It will generate something like:
+To inspect test coverage, run `pytest --cov=TEST_DIR`. These are the test results and adequacy metrics obtained:
 
 ```
----------- coverage: platform darwin, python 3.11.6-final-0 ----------
+---------- coverage: platform linux, python 3.9.19-final-0 -----------
 Name                                                       Stmts   Miss  Cover
 ------------------------------------------------------------------------------
-tests/infra_integration_tests/test_config_reader.py           12     1    58%
-tests/infra_integration_tests/test_define_train_model.py      11     0    78%
-tests/infra_integration_tests/test_get_data.py                18     0    94%
-tests/infra_integration_tests/test_predict.py                 12     0    87%
-tests/test_features_data.py                                  105     1    65%
-tests/test_monitoring.py                                      28     0    86%
+tests/infra_integration_tests/test_config_reader.py           12      1    92%
+tests/infra_integration_tests/test_define_train_model.py      13      1    92%
+tests/infra_integration_tests/test_get_data.py                18      2    89%
+tests/infra_integration_tests/test_predict.py                 12      1    92%
+tests/test_features_data.py                                  105      1    99%
+tests/test_monitoring.py                                      28      0   100%
 ------------------------------------------------------------------------------
-TOTAL                                                        186    131    78%
+TOTAL                                                        188      6    97%
+
+================== 15 passed, 1 warning in 283.94s (0:04:43) ===================
 ```
 
 - `Stmts`: The total number of statements in the package.
