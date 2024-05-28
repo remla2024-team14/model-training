@@ -33,11 +33,11 @@ jobs:
     - name: Install lib-ml
       run: pip install .
 
-    - name: Save and Publish Model
-      run: |
-        python src/define_train_model.py
-        # Add commands to upload model to a cloud or save it with a public link
-        # Example: aws s3 cp model.pkl s3://yourbucket/model.pkl --acl public-read
+    # - name: Save and Publish Model
+    #   run: |
+    #     python src/define_train_model.py
+    #     # Add commands to upload model to a cloud or save it with a public link
+    #     # Example: aws s3 cp model.pkl s3://yourbucket/model.pkl --acl public-read
   
   stylecheck:
     runs-on: ubuntu-latest
