@@ -113,10 +113,16 @@ In Pylint's configuration file `pylintrc`, we have thoroughly analysed linter ru
 
 To analyse our Python code using Flake8, we run `flake8 --max-line-length 100`. This will configure the maximum allowed line length to 100 (in line with Pylint), instead of the 88 which is the default.
 
-### PyTest
+### PyTest for ML Testing
+
+#### Test Setup
 
 When using PyTest, passing arguments to methods require `@pytest.mark.parametrize` and `pytest.fixture`.
 PyTest will run the test for each parameter.
+
+Since our dataset does not contain features, we made two features `no_char` which is the length of the URL and `segments` which is length of the path of the URL.
+
+#### Running Tests
 
 We can use PyTest-monitor to check the memory usage.
 *Note: `pytest-monitor` updates its SQLite database incrementally, so delete monitor.db file between test runs.*
@@ -125,7 +131,32 @@ To run the tests run `pytest --db ./monitor.db` or `pytest` if you do not want t
 
 To view memory usage of each test in terminal run `sqlite3 ./monitor.db`, then `.headers on`, then `.mode column` and at last `select ITEM, MEM_USAGE from TEST_METRICS ORDER BY MEM_USAGE DESC LIMIT 10;`
 
-The plots for the features and data are stored in outputs/plots. Since our dataset does not contain features, we made two features `no_char` which is the length of the URL and `segments` which is length of the path of the URL.
+The plots for the features and data are stored in outputs/plots. 
+
+#### Test Adequacy
+
+To inspect test coverage, run `pytest --cov=TEST_DIR`. These are the test results and adequacy metrics obtained:
+
+```
+---------- coverage: platform linux, python 3.9.19-final-0 -----------
+Name                                                       Stmts   Miss  Cover
+------------------------------------------------------------------------------
+tests/infra_integration_tests/test_config_reader.py           12      1    92%
+tests/infra_integration_tests/test_define_train_model.py      13      1    92%
+tests/infra_integration_tests/test_get_data.py                18      2    89%
+tests/infra_integration_tests/test_predict.py                 12      1    92%
+tests/test_features_data.py                                  105      1    99%
+tests/test_monitoring.py                                      28      0   100%
+------------------------------------------------------------------------------
+TOTAL                                                        188      6    97%
+
+================== 15 passed, 1 warning in 283.94s (0:04:43) ===================
+```
+
+- `Stmts`: The total number of statements in the package.
+- `Miss`: The number of statements that were not executed during testing.
+- `Cover`: The percentage of statements that were executed during testing.
+
 
 ## Contributors
 
