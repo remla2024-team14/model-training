@@ -35,6 +35,10 @@ jobs:
     
     # TODO: remove later and uncomment below under test job
     - name: Run all ML unit tests and generate coverage report
+      env:
+        AWS_ACCESS_KEY_ID: ${{ AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ AWS_SECRET_ACCESS_KEY }}
+        AWS_BUCKET_NAME: ${{ AWS_BUCKET_NAME }}
       run: |
         pytest --cov==tests
 
