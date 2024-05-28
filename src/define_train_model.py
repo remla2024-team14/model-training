@@ -109,11 +109,11 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
                      validation_data=(x_val, y_val))
 
     history_keys = list(hist.history.keys())
-    accuracy_key = [key for key in history_keys if 'accuracy' in key and not 'val' in key][0]
+    accuracy_key = [key for key in history_keys if 'accuracy' in key and 'val' not in key][0]
     val_accuracy_key = [key for key in history_keys if 'val_accuracy' in key][0]
-    precision_key = [key for key in history_keys if 'precision' in key and not 'val' in key][0]
+    precision_key = [key for key in history_keys if 'precision' in key and 'val' not in key][0]
     val_precision_key = [key for key in history_keys if 'val_precision' in key][0]
-    recall_key = [key for key in history_keys if 'recall' in key and not 'val' in key][0]
+    recall_key = [key for key in history_keys if 'recall' in key and 'val' not in key][0]
     val_recall_key = [key for key in history_keys if 'val_recall' in key][0]
 
     tokenizer_path = 'outputs/tokenizer.pkl'
