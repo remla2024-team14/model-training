@@ -33,6 +33,7 @@ jobs:
     - name: Install lib-ml
       run: pip install .
     
+    # TODO: remove later and uncomment below under test job
     - name: Run all ML unit tests and generate coverage report
       run: |
         pytest --cov==tests
@@ -62,22 +63,20 @@ jobs:
         pip install pylint
         pylint --fail-under=7 .
 
-  # tests:
-  #   needs: stylecheck
-  #   runs-on: ubuntu-latest
+  tests:
+    needs: stylecheck
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - uses: actions/checkout@v2
+    steps:
+    - uses: actions/checkout@v2
 
-  #   - name: Set up Python 3.9
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: 3.9
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
         
-  #   - name: Run all ML unit tests and generate coverage report
-  #     run: |
-  #       echo "Current working directory:"
-  #       pwd
-  #       echo "List of files in the current directory:"
-  #       ls -la
-  #       pytest --cov==tests
+    # - name: Run all ML unit tests and generate coverage report
+    #   run: |
+    #     pip install pytest
+    #     pip install pytest-cov
+    #     pytest --cov==tests
