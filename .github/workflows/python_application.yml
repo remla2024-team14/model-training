@@ -52,9 +52,28 @@ jobs:
         pip install pylint
         pylint --fail-under=7 .
 
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+        
+    - name: Run all ML unit tests and generate coverage report
+      run: |
+        echo "Current working directory:"
+        pwd
+        echo "List of files in the current directory:"
+        ls -la
+        pytest --cov==tests
+
   publish-model:
     runs-on: ubuntu-latest
-    needs: build
+    needs: stylecheck
     steps:
     - uses: actions/checkout@v2
 
