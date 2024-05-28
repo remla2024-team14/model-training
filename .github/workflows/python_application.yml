@@ -39,9 +39,9 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
-        pytest --cov==tests
+        pytest --cov tests
 
-    - name: Save and Publish Model
+    - name: Publish model and show metrics
       run: |
         python src/define_train_model.py
         # Add commands to upload model to a cloud or save it with a public link
