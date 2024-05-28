@@ -3,7 +3,7 @@
     "base_dir": "data",
     "raw_outputs_dir": "outputs/raw",
     "tokenized_outputs_dir": "outputs/tokenized",
-    "model_path": "outputs/model.keras",
+    "model_path": "models/model.keras",
     "metrics_file": "outputs/metrics/metrics.json"
   },
   "remote_download": false,
