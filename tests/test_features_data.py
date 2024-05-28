@@ -18,7 +18,7 @@ def model_setup(request):
     preprocessor.fit_text([input_url])
     processed_texts = preprocessor.transform_text([input_url])
 
-    model = load_model('models/model.keras')
+    model = load_model('models/model.h5')
     return model, processed_texts
 
 
