@@ -10,9 +10,11 @@ class TestDefineTrainModel(unittest.TestCase):
         params = define_params()
 
         model = define_model(params, char_index)
+        output_layer = model.layers[-1]
 
         self.assertEqual(x_train.shape, x_val.shape)
         self.assertEqual(y_train.shape, y_val.shape)
+        self.assertTrue(output_layer.output_shape[-1] == 1)
 
 
 if __name__ == "__main__":
