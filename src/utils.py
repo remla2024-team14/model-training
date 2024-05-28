@@ -11,5 +11,5 @@ def load_variable(filename):
     file_path = join(RAW_DATA_PATH, filename)
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
-        data = re.findall(r'"(.*?)"', content)
+        data = re.findall(r'https?://[^\s,]+', content)
     return data
