@@ -1,13 +1,8 @@
-import sys
-import os
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-
 import numpy as np
 from src.define_train_model import train_model, define_params, define_model, load_data
 
-# this test belongs under the category "Model Development"
+
+# This test belongs under the category "Model Development"
 def test_mutamorphic_behavior():
     x_train, y_train, x_val, y_val, char_index, preprocessor = load_data()
     params = define_params()
