@@ -32,6 +32,12 @@ jobs:
 
     - name: Install lib-ml
       run: pip install .
+  
+  stylecheck:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v2
 
     - name: Lint with flake8
       run: |
@@ -45,6 +51,12 @@ jobs:
       run: |
         pip install pylint
         pylint --fail-under=7 .
+
+  publish-model:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v2
 
     - name: Save and Publish Model
       run: |
