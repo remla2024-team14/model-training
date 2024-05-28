@@ -68,3 +68,7 @@ for partition in ["train", "test", "val"]:
 
     with open(file_path_y, 'w') as filehandle:
         json.dump(globals()[f"raw_y_{partition}"], filehandle)
+
+
+def get_data():
+    return raw_x_train, raw_y_train, raw_x_val, raw_y_val, raw_x_test, raw_y_test
