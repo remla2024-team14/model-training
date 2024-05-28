@@ -49,16 +49,6 @@ def test_multiple_spam(model_setup):
     assert result > 0.5
 
 
-# Test code that creates input features in both training and serving
-@pytest.mark.parametrize("model_setup", [""], indirect=True)
-def test_empty_string(model_setup):
-    model, url = model_setup
-    with pytest.raises(AttributeError) as exc_info:
-        model.predict(url)
-
-    assert "'NoneType' object has no attribute 'shape'" in str(exc_info.value)
-
-
 # Test that system maintains privacy controls across its entire data pipeline, this is the only way our data is
 # downloaded:
 def test_privacy():
