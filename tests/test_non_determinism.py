@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 from src.define_train_model import train_model, load_data, define_params, define_model
 
-
+# this test belongs under the category "Model Development"
 def test_non_deterministic_behavior():
     def train_and_evaluate(seed):
         np.random.seed(seed)
