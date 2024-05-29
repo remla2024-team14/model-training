@@ -138,19 +138,23 @@ The plots for the features and data are stored in outputs/plots.
 To inspect test coverage, run `pytest --cov=TEST_DIR`. These are the test results and adequacy metrics obtained:
 
 ```
+
 ---------- coverage: platform linux, python 3.9.19-final-0 -----------
 Name                                                       Stmts   Miss  Cover
 ------------------------------------------------------------------------------
 tests/infra_integration_tests/test_config_reader.py           12      1    92%
-tests/infra_integration_tests/test_define_train_model.py      13      1    92%
+tests/infra_integration_tests/test_define_train_model.py      12      1    92%
 tests/infra_integration_tests/test_get_data.py                18      2    89%
 tests/infra_integration_tests/test_predict.py                 12      1    92%
+tests/test_data_slices.py                                     22      1    95%
 tests/test_features_data.py                                  105      1    99%
 tests/test_monitoring.py                                      28      0   100%
+tests/test_mutamorphic.py                                     31      9    71%
+tests/test_non_determinism.py                                 23      1    96%
 ------------------------------------------------------------------------------
-TOTAL                                                        188      6    97%
+TOTAL                                                        263     17    94%
 
-================== 15 passed, 1 warning in 283.94s (0:04:43) ===================
+================== 18 passed, 1 warning in 3432.96s (0:57:12) ==================
 ```
 
 - `Stmts`: The total number of statements in the package.
