@@ -51,6 +51,14 @@ def load_data():
         encoder.fit(all_labels)
         y_train = encoder.transform(raw_y_train)
         y_val = encoder.transform(raw_y_val)
+        
+        min_train_length = min(len(x_train), len(y_train))
+        x_train = x_train[:min_train_length]
+        y_train = y_train[:min_train_length]
+        min_val_length = min(len(x_val), len(y_val))
+        x_val = x_val[:min_val_length]
+        y_val = y_val[:min_val_length]
+
         return x_train, y_train, x_val, y_val, char_index, preprocessor
     except Exception as e:
         logging.error(f"Failed to load or process data: {e}")
