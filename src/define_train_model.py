@@ -51,7 +51,7 @@ def load_data():
         encoder.fit(all_labels)
         y_train = encoder.transform(raw_y_train)
         y_val = encoder.transform(raw_y_val)
-        
+
         min_train_length = min(len(x_train), len(y_train))
         x_train = x_train[:min_train_length]
         y_train = y_train[:min_train_length]
