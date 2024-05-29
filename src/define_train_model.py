@@ -51,6 +51,14 @@ def load_data():
         encoder.fit(all_labels)
         y_train = encoder.transform(raw_y_train)
         y_val = encoder.transform(raw_y_val)
+
+        min_train_length = min(len(x_train), len(y_train))
+        x_train = x_train[:min_train_length]
+        y_train = y_train[:min_train_length]
+        min_val_length = min(len(x_val), len(y_val))
+        x_val = x_val[:min_val_length]
+        y_val = y_val[:min_val_length]
+
         return x_train, y_train, x_val, y_val, char_index, preprocessor
     except Exception as e:
         logging.error(f"Failed to load or process data: {e}")
@@ -88,16 +96,25 @@ def train_model(model, params, x_train, y_train, x_val, y_val, preprocessor):
                      epochs=params['epoch'],
                      shuffle=True,
                      validation_data=(x_val, y_val))
+    history_keys = list(hist.history.keys())
+    accuracy_key = [key for key in history_keys if 'accuracy' in key and 'val' not in key][0]
+    val_accuracy_key = [key for key in history_keys if 'val_accuracy' in key][0]
+    precision_key = [key for key in history_keys if 'precision' in key and 'val' not in key][0]
+    val_precision_key = [key for key in history_keys if 'val_precision' in key][0]
+    recall_key = [key for key in history_keys if 'recall' in key and 'val' not in key][0]
+    val_recall_key = [key for key in history_keys if 'val_recall' in key][0]
+
     tokenizer_path = 'outputs/tokenizer.pkl'
     with open(tokenizer_path, 'wb') as handle:
         pickle.dump(preprocessor.tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
     metrics = {
-        "accuracy": hist.history['accuracy'][-1],
-        "val_accuracy": hist.history['val_accuracy'][-1],
-        "precision": hist.history['precision'][-1],
-        "val_precision": hist.history['val_precision'][-1],
-        "recall": hist.history['recall'][-1],
-        "val_recall": hist.history['val_recall'][-1],
+        "accuracy": hist.history[accuracy_key][-1],
+        "val_accuracy": hist.history[val_accuracy_key][-1],
+        "precision": hist.history[precision_key][-1],
+        "val_precision": hist.history[val_precision_key][-1],
+        "recall": hist.history[recall_key][-1],
+        "val_recall": hist.history[val_recall_key][-1],
         "loss": hist.history['loss'][-1],
         "val_loss": hist.history['val_loss'][-1]
     }

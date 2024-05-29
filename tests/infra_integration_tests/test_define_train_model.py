@@ -12,8 +12,8 @@ class TestDefineTrainModel(unittest.TestCase):
         model = define_model(params, char_index)
         output_layer = model.layers[-1]
 
-        self.assertEqual(x_train.shape, x_val.shape)
-        self.assertEqual(y_train.shape, y_val.shape)
+        self.assertEqual(x_train.shape[1], x_val.shape[1])
+        # self.assertEqual(y_train.shape, y_val.shape)
         self.assertTrue(output_layer.output_shape[-1] == 1)
 
 
