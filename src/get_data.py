@@ -4,7 +4,7 @@ import json
 import os
 from os.path import join
 import boto3
-from dotenv import load_dotenv
+import urllib
 
 from src.config_reader import ConfigReader
 
@@ -12,31 +12,27 @@ directories = ConfigReader().params["directories"]
 BASE_DIR, OUTPUTS_DIR = directories["base_dir"], directories["raw_outputs_dir"]
 REMOTE = ConfigReader().params["remote_download"]
 
-load_dotenv()
 
-
-def fetch_data_remotely():
-    s3 = boto3.client('s3', aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-                      aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
-    files_and_keys = {
-        'train.txt': 'data/train.txt',
-        'test.txt': 'data/test.txt',
-        'val.txt': 'data/val.txt'
+def fetch_data_publicly():
+    files_and_urls = {
+        'train.txt': 'https://team14awsbucket.s3.amazonaws.com/train.txt',
+        'test.txt': 'https://team14awsbucket.s3.amazonaws.com/test.txt',
+        'val.txt': 'https://team14awsbucket.s3.amazonaws.com/val.txt'
     }
 
     # Ensure the data directory exists
     if not os.path.exists(BASE_DIR):
         os.makedirs(BASE_DIR)
 
-    # download data with files and keys
-    for local_file, s3_key in files_and_keys.items():
+    # Download data from public URLs
+    for local_file, url in files_and_urls.items():
         local_path = os.path.join(BASE_DIR, local_file)
-        s3.download_file(os.getenv('AWS_BUCKET_NAME'), s3_key, local_path)
-        print(f"Downloaded {s3_key} to {local_path}")
+        urllib.request.urlretrieve(url, local_path)
+        print(f"Downloaded {url} to {local_path}")
 
 
 if REMOTE:
-    fetch_data_remotely()
+    fetch_data_publicly()
 
 train_dir = join(BASE_DIR, "train.txt")
 test_dir = join(BASE_DIR, "test.txt")
