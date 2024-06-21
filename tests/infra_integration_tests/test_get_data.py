@@ -1,5 +1,5 @@
 import unittest
-from src.get_data import fetch_data_remotely
+from src.get_data import fetch_data_publicly
 import os
 import shutil
 
