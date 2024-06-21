@@ -3,7 +3,6 @@
 import json
 import os
 from os.path import join
-import boto3
 import urllib
 
 from src.config_reader import ConfigReader
