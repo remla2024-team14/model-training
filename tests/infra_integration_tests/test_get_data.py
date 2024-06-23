@@ -1,5 +1,5 @@
 import unittest
-from src.get_data import fetch_data_remotely
+from src.get_data import fetch_data_publicly
 import os
 import shutil
 
@@ -14,7 +14,7 @@ class TestFetchData(unittest.TestCase):
             print(f"Folder '{folder_path}' does not exist.")
 
     def test_fetch_data_remotely(self):
-        fetch_data_remotely()
+        fetch_data_publicly()
         self.assertTrue(os.path.exists("data"))
         self.assertTrue(os.path.isfile("data/train.txt"))
         self.assertTrue(os.path.isfile("data/val.txt"))
