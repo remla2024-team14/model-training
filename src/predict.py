@@ -1,6 +1,9 @@
-
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-from src.config_reader import ConfigReader
+try:
+    from config_reader import ConfigReader
+except ImportError:
+    from src.config_reader import ConfigReader
+
 import logging
 from lib_ml.preprocessing import TextPreprocessor
 from sklearn.preprocessing import LabelEncoder

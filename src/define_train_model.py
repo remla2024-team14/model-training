@@ -3,8 +3,14 @@
 from keras.models import Sequential
 from keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense, Dropout
 from keras.metrics import Precision, Recall
-from src.utils import load_variable
-from src.config_reader import ConfigReader
+
+try:
+    from utils import load_variable
+    from config_reader import ConfigReader
+except ImportError:
+    from src.utils import load_variable
+    from src.config_reader import ConfigReader
+
 import os
 from os.path import join
 import json

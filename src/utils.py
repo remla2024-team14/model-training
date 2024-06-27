@@ -1,5 +1,8 @@
-from src.config_reader import ConfigReader
 from os.path import join
+try:
+    from config_reader import ConfigReader
+except ImportError:
+    from src.config_reader import ConfigReader
 
 
 directories = ConfigReader().params["directories"]
