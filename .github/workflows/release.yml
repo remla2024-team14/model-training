@@ -1,0 +1,115 @@
+name: Release to GitHub Container Registry
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'       # Semantic versioning (e.g., v1.0.0, v2.3.4)
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write        # Needed for automatic patch bumping
+
+    steps:
+      # Add a conditional step to check if the event was a closed PR
+      - name: Check if event is closed PR
+        id: check_closed_pr
+        run: echo "PR_CLOSED=$(jq -r '.pull_request.merged' "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Checkout code
+        if: steps.check_closed_pr.outputs.PR_CLOSED == 'true'
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}   # Needed for automatic pre-releases
+          fetch-depth: '0'
+      
+      - name: Checkout code
+        if: steps.check_closed_pr.outputs.PR_CLOSED != 'true'
+        uses: actions/checkout@v3
+
+      - name: Extract version
+        id: version
+        run: echo "::set-output name=version::${GITHUB_REF#refs/tags/}"
+
+      - name: Log into GitHub Container Registry
+        run: echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # In the case of closing PRs, automatically bump current version (default: patch)
+      # Any commit message that includes #major, #minor, #patch, or #none will trigger the respective version bump. 
+      # If no #major, #minor or #patch tag is contained in the merge commit message, it will bump whichever DEFAULT_BUMP is set to
+      - name: Bump version and push tag
+        if: steps.check_closed_pr.outputs.PR_CLOSED == 'true'
+        id: bump
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true                 # Tag with v character           
+          DEFAULT_BUMP: patch          # Which type of bump to use when none explicitly provided in commit msg
+          PRERELEASE: true             # Define if workflow runs in prerelease mode
+          PRERELEASE_SUFFIX: beta      # Suffix for your prerelease versions. Note this will only be used if a prerelease branch.
+
+      - name: Check bump versioning output
+        if: steps.check_closed_pr.outputs.PR_CLOSED == 'true'
+        run: |
+          echo "Old Tag: ${{ steps.bump.outputs.old_tag }}"
+          echo "New Tag: ${{ steps.bump.outputs.new_tag }}"
+          echo "Tag: ${{ steps.bump.outputs.tag }}"
+          echo "Part: ${{ steps.bump.outputs.part }}"
+     
+      - name: Build Docker image
+        run: docker build -t app .
+      
+      - name: Parse semantic version from tag
+        id: semantic-version
+        run: |
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          if [[ "${{ steps.check_closed_pr.outputs.PR_CLOSED }}" == 'true' ]]; then
+            echo "Case PR closed: the automatically bumped version will be used"
+            VERSION=${{ steps.bump.outputs.new_tag }}
+          else
+            echo "Case pushed tag: the manually created tag will be used"
+            VERSION=${GITHUB_REF:11}
+          fi
+          echo "$VERSION"
+          MAJOR=`echo "$VERSION" | cut -d . -f 1`
+          MINOR=`echo "$VERSION" | cut -d . -f 2`
+          PATCH=`echo "$VERSION" | cut -d . -f 3`
+          echo "::set-output name=version::$VERSION"
+          echo "::set-output name=version_major::$MAJOR"
+          echo "::set-output name=version_minor::$MINOR"
+          echo "::set-output name=version_patch::$PATCH"
+
+      - name: Tag Docker image with distinct versions
+        run: |
+          IMG=ghcr.io/${{ github.repository }}
+          docker tag app $IMG:${{ steps.semantic-version.outputs.version }}
+          docker tag app $IMG:latest
+          docker tag app $IMG:${{ steps.semantic-version.outputs.version_major }}.${{ steps.semantic-version.outputs.version_minor }}.latest
+          docker tag app $IMG:${{ steps.semantic-version.outputs.version_major }}.latest
+
+      - name: Push Docker image to GitHub Container Registry
+        run: |
+          IMG=ghcr.io/${{ github.repository }}
+          docker push $IMG:${{ steps.semantic-version.outputs.version }}
+          docker push $IMG:latest
+          docker push $IMG:${{ steps.semantic-version.outputs.version_major }}.${{ steps.semantic-version.outputs.version_minor }}.latest
+          docker push $IMG:${{ steps.semantic-version.outputs.version_major }}.latest
+
+      - name: Trigger release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: Release ${{ steps.version.outputs.version }}
+          body: |
+            Release app version ${{ steps.version.outputs.version }}
